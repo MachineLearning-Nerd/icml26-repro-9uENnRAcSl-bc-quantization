@@ -1,0 +1,39 @@
+{
+  "c1_sample_complexity": {
+    "passed": true,
+    "train_mses": [
+      0.051050575303325504,
+      0.21760622462597162,
+      0.20389892927062991
+    ]
+  },
+  "c2_piiss_rtvc": {
+    "passed": true,
+    "regrets_by_bins": [
+      0.6488807171920125,
+      0.42844525443801645,
+      0.35281361946115863
+    ]
+  },
+  "c3_nonsmooth": {
+    "passed": true,
+    "smooth": 0.42844525443801645,
+    "nonsmooth": 1286.0664277460032
+  },
+  "c4_augmentation": {
+    "passed": true,
+    "base": 0.42844525443801645,
+    "augmented": 0.22831259291686085
+  },
+  "c5_lower_bound": {
+    "passed": true,
+    "min_regret": 0.024659483338346222,
+    "eps_q": 0.5,
+    "note": "info-theoretic lower bound; regret > 0 with quantization error"
+  },
+  "c6_binning_smoothness": {
+    "passed": true,
+    "monotone_smooth": true,
+    "monotone_nonsmooth": false
+  }
+}
