@@ -552,8 +552,49 @@ def _claim4_raw(claim3: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _bin_label(action: float, epsilon: float, width_factor: float = 1.0) -> int:
-    return math.floor((action + 2.0) / (width_factor * epsilon))
+def _bin_decode(
+    actions: np.ndarray, epsilon: float, width_factor: float = 1.0
+) -> np.ndarray:
+    width = width_factor * epsilon
+    labels = np.floor((actions + 2.0) / width)
+    return -2.0 + (labels + 0.5) * width
+
+
+def _quantized_gaussian_tv(
+    mean_left: float,
+    mean_right: float,
+    sigma: float,
+    epsilon: float,
+    tail_sigma: float,
+) -> dict[str, float | int]:
+    lower_action = min(mean_left, mean_right) - tail_sigma * sigma
+    upper_action = max(mean_left, mean_right) + tail_sigma * sigma
+    first_label = math.floor((lower_action + 2.0) / epsilon)
+    last_label = math.ceil((upper_action + 2.0) / epsilon)
+    edges = -2.0 + np.arange(
+        first_label, last_label + 2, dtype=float
+    ) * epsilon
+    left_probabilities = np.diff(ndtr((edges - mean_left) / sigma))
+    right_probabilities = np.diff(ndtr((edges - mean_right) / sigma))
+    categorical_tv = 0.5 * float(
+        np.sum(np.abs(left_probabilities - right_probabilities))
+    )
+    omitted_mass = max(
+        float(
+            ndtr((edges[0] - mean_left) / sigma)
+            + ndtr(-(edges[-1] - mean_left) / sigma)
+        ),
+        float(
+            ndtr((edges[0] - mean_right) / sigma)
+            + ndtr(-(edges[-1] - mean_right) / sigma)
+        ),
+    )
+    return {
+        "tail_sigma": tail_sigma,
+        "bins_evaluated": len(left_probabilities),
+        "categorical_TV": categorical_tv,
+        "omitted_mass_upper": omitted_mass,
+    }
 
 
 def _claim6_raw() -> dict[str, Any]:
@@ -574,56 +615,102 @@ def _claim6_raw() -> dict[str, Any]:
                     "epsilon_q": epsilon,
                     "resolution": resolution,
                     "spacing": spacing,
+                    "epsilon_prime": 3 * epsilon,
                     "jump": learned_jump,
                     "deterministic_TV": 1.0,
+                    "relaxed_OT_cost": float(
+                        learned_jump > 3 * epsilon
+                    ),
                     "rtvc_violation": learned_jump > 3 * epsilon,
                 }
             )
-        grid = np.linspace(-1.0, 1.0, 4 * resolutions[-1] + 1)
-        pairs = 0
-        violations = 0
-        broken = 0
-        for index in range(len(grid) - 1):
-            if grid[index + 1] - grid[index] <= epsilon + 1e-15:
-                pairs += 1
-                a0, a1 = math.atan(grid[index]), math.atan(grid[index + 1])
-                violations += int(
-                    abs(
-                        _bin_label(a1, epsilon) - _bin_label(a0, epsilon)
-                    )
-                    * epsilon
-                    > 3 * epsilon + 1e-12
+            grid = (
+                np.arange(-8 * resolution, 8 * resolution + 1)
+                * spacing
+            )
+            raw_actions = np.arctan(grid)
+            decoded = _bin_decode(raw_actions, epsilon)
+            broken_decoded = _bin_decode(
+                raw_actions, epsilon, width_factor=4.0
+            )
+            pairs = 0
+            violations = 0
+            broken = 0
+            max_output_distance = 0.0
+            for offset in range(1, resolution + 1):
+                distances = np.abs(decoded[offset:] - decoded[:-offset])
+                broken_distances = np.abs(
+                    broken_decoded[offset:] - broken_decoded[:-offset]
                 )
+                pairs += len(distances)
+                violations += int(np.sum(distances > 3 * epsilon + 1e-12))
                 broken += int(
-                    abs(
-                        _bin_label(a1, epsilon, 4.0)
-                        - _bin_label(a0, epsilon, 4.0)
-                    )
-                    * 4
-                    * epsilon
-                    > 3 * epsilon + 1e-12
+                    np.sum(broken_distances > 3 * epsilon + 1e-12)
                 )
-        broken_violations += broken
-        binning_rows.append(
-            {
-                "epsilon_q": epsilon,
-                "pair_count": pairs,
-                "violations": violations,
-                "broken_width_violations": broken,
-            }
-        )
-        dx = epsilon / 8
-        sigma = 0.1
-        raw_gaussian_tv = 2 * float(ndtr(dx / (2 * sigma))) - 1
-        stochastic_rows.append(
-            {
-                "epsilon_q": epsilon,
-                "state_spacing": dx,
-                "raw_gaussian_TV": raw_gaussian_tv,
-                "quantized_TV_upper_by_data_processing": raw_gaussian_tv,
-                "deterministic_TV_at_learned_jump": 1.0,
-            }
-        )
+                max_output_distance = max(
+                    max_output_distance, float(np.max(distances))
+                )
+            broken_violations += broken
+            binning_rows.append(
+                {
+                    "epsilon_q": epsilon,
+                    "resolution": resolution,
+                    "state_spacing": spacing,
+                    "state_pair_radius_delta_0": epsilon,
+                    "epsilon_prime": 3 * epsilon,
+                    "pair_count": pairs,
+                    "relaxed_OT_cost_violations": violations,
+                    "violations": violations,
+                    "max_output_distance": max_output_distance,
+                    "quantizer_error_bound": epsilon / 2,
+                    "broken_bin_width": 4 * epsilon,
+                    "broken_quantizer_error": 2 * epsilon,
+                    "broken_width_violations": broken,
+                }
+            )
+            stochastic_left = -spacing / 2
+            stochastic_right = spacing / 2
+            mean_left = math.atan(stochastic_left)
+            mean_right = math.atan(stochastic_right)
+            sigma = 0.1
+            mean_gap = abs(mean_right - mean_left)
+            raw_gaussian_tv = 2 * float(
+                ndtr(mean_gap / (2 * sigma))
+            ) - 1
+            tail_8 = _quantized_gaussian_tv(
+                mean_left,
+                mean_right,
+                sigma,
+                epsilon,
+                tail_sigma=8.0,
+            )
+            tail_10 = _quantized_gaussian_tv(
+                mean_left,
+                mean_right,
+                sigma,
+                epsilon,
+                tail_sigma=10.0,
+            )
+            stochastic_rows.append(
+                {
+                    "epsilon_q": epsilon,
+                    "resolution": resolution,
+                    "state_spacing": spacing,
+                    "raw_gaussian_TV": raw_gaussian_tv,
+                    "quantized_categorical_TV": tail_10[
+                        "categorical_TV"
+                    ],
+                    "data_processing_gap": (
+                        raw_gaussian_tv - tail_10["categorical_TV"]
+                    ),
+                    "tail_8": tail_8,
+                    "tail_10": tail_10,
+                    "tail_refinement_difference": abs(
+                        tail_10["categorical_TV"]
+                        - tail_8["categorical_TV"]
+                    ),
+                }
+            )
     return {
         "source_result": {
             "status": "FALSIFIED",
@@ -638,6 +725,16 @@ def _claim6_raw() -> dict[str, Any]:
         "learned_piecewise_pairs": learned_rows,
         "stochastic_actual_tv_criterion": stochastic_rows,
         "broken_bin_width_total_violations": broken_violations,
+        "criteria": {
+            "deterministic": (
+                "Definition 4 thresholded OT: for point masses the cost is "
+                "1{|q(pi(x))-q(pi(x'))|>epsilon_prime}."
+            ),
+            "stochastic": (
+                "Definition 4 with epsilon_prime=0 is ordinary TV; compute "
+                "the categorical TV of all quantized Gaussian bin masses."
+            ),
+        },
     }
 
 
@@ -740,16 +837,32 @@ def run_claims_3_4_6() -> dict[str, dict[str, Any]]:
     }
     c6_checks = {
         "source_falsification": claim6["source_result"]["status"] == "FALSIFIED",
+        "all_epsilon_resolution_cells": len(claim6["binning_pairs"]) == 16,
         "binning_zero_violations": all(
             row["violations"] == 0 for row in claim6["binning_pairs"]
+        ),
+        "binning_quantizer_assumption_valid": all(
+            row["quantizer_error_bound"] <= row["epsilon_q"]
+            for row in claim6["binning_pairs"]
         ),
         "learned_persistent_jump": min(
             row["jump"] for row in claim6["learned_piecewise_pairs"]
         )
         > 0.8,
+        "learned_relaxed_OT_cost_one": all(
+            row["relaxed_OT_cost"] == 1
+            for row in claim6["learned_piecewise_pairs"]
+        ),
         "learned_deterministic_tv_one": all(
             row["deterministic_TV"] == 1
             for row in claim6["learned_piecewise_pairs"]
+        ),
+        "stochastic_actual_TV_data_processing": all(
+            row["quantized_categorical_TV"]
+            <= row["raw_gaussian_TV"] + 1e-12
+            and row["tail_refinement_difference"] < 1e-12
+            and row["tail_10"]["omitted_mass_upper"] < 1e-20
+            for row in claim6["stochastic_actual_tv_criterion"]
         ),
         "broken_width_control": claim6[
             "broken_bin_width_total_violations"

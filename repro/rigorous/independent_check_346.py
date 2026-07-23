@@ -109,10 +109,36 @@ def check_claims_3_4_6() -> dict[str, Any]:
         "claim6_binning_zero": all(
             row["violations"] == 0 for row in raw6["binning_pairs"]
         ),
+        "claim6_exhaustive_multiresolution_pairs": (
+            len(raw6["binning_pairs"]) == 16
+            and len(
+                {
+                    (row["epsilon_q"], row["resolution"])
+                    for row in raw6["binning_pairs"]
+                }
+            )
+            == 16
+            and min(
+                row["pair_count"] for row in raw6["binning_pairs"]
+            )
+            > 1_000
+        ),
         "claim6_learned_persistent": min(
             row["jump"] for row in raw6["learned_piecewise_pairs"]
         )
-        > 0.8,
+        > 0.8
+        and all(
+            row["relaxed_OT_cost"] == 1
+            for row in raw6["learned_piecewise_pairs"]
+        ),
+        "claim6_stochastic_actual_categorical_TV": all(
+            0
+            <= row["quantized_categorical_TV"]
+            <= row["raw_gaussian_TV"] + 1e-12
+            and row["tail_refinement_difference"] < 1e-12
+            and row["tail_10"]["omitted_mass_upper"] < 1e-20
+            for row in raw6["stochastic_actual_tv_criterion"]
+        ),
         "claim6_source_is_literal_falsification": (
             raw6["source_result"]["status"] == "FALSIFIED"
         ),
