@@ -17,6 +17,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 ARTIFACT_ROOT = REPO_ROOT / ".openresearch" / "artifacts"
 FIXED_COMMAND = "uv run --frozen python repro/src/verify_bc.py"
 
+# Exact finite-product certificates legitimately contain integers with more
+# than Python's default 4,300 decimal digits. They are generated internally,
+# not parsed from untrusted input.
+if hasattr(sys, "set_int_max_str_digits"):
+    sys.set_int_max_str_digits(0)
+
 
 def canonical_json(data: Any) -> str:
     return json.dumps(data, indent=2, sort_keys=True, allow_nan=False) + "\n"
