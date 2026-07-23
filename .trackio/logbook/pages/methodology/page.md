@@ -28,3 +28,10 @@ The release snapshot comes from cumulative local run
 `ca81069980d0373357ee1bdc675c059c4a56872c`. The release-candidate branch
 adds only check isolation, packaging, and preservation gates, then reruns the
 same scientific suite on Hugging Face `cpu-upgrade`.
+
+Cross-platform regeneration requires identical raw JSON schema and array
+shapes plus every registered numerical/symbolic producer and independent
+checker gate. Byte-identical floating-point JSON is deliberately not required:
+the immutable macOS snapshot and regenerated Linux hashes are both printed,
+and platform-level numerical differences must remain inside the scientific
+acceptance contracts.

@@ -22,3 +22,9 @@ paper's theoretical RTVC contrast is reproduced.
 
 Passing these gates supports release readiness. It does not guarantee any
 external judge score.
+
+Seeded NumPy distribution summaries are not claimed to be bitwise identical
+across CPU architectures. The release preserves one immutable raw snapshot,
+regenerates the same schemas and shapes, publishes both SHA-256 sets, and
+requires all rate intervals, exact identities, residual comparisons,
+quadrature tolerances, and negative controls to pass independently.

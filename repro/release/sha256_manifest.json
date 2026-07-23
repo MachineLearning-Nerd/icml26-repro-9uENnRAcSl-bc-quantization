@@ -320,12 +320,12 @@
     "sha256": "96a6dd27fd6f73ba3ebcebf95cb8cab84e21be5b8ebb1f481351e2b3beae4d4a"
   },
   "pages/limitations/page.md": {
-    "bytes": 1150,
-    "sha256": "6964a5771e183306042036da66bc4a352f78665edeaf5b41aa0f5f29534ba982"
+    "bytes": 1514,
+    "sha256": "bfc0f1e26de57b7a0e9d0425fb46b4f394d7d8c04c9985864cb4f4afeacf5eb9"
   },
   "pages/methodology/page.md": {
-    "bytes": 1316,
-    "sha256": "20bc125e2320019f158f59add6ed1ddec7775ad54e9539d9cc04dcdec6649550"
+    "bytes": 1715,
+    "sha256": "b3e0cf29d7b59739626dac47db8cf762be8775c4679080f07a2e58029d6209d1"
   },
   "pages/overview/page.md": {
     "bytes": 735,
@@ -424,8 +424,8 @@
     "sha256": "a2ba223b394052e38c4db0ce4998d9f77a56fd7f9cfb583c3eb2a84a1aafb093"
   },
   "repro/release/validate_release.py": {
-    "bytes": 5838,
-    "sha256": "bbc8f2f676f9eace99d3e19af47c78d01e00a749ff4126756fd5c098c6262ad0"
+    "bytes": 7411,
+    "sha256": "da534f96deef272924584158a03ae1181ea06165ca2a39d1e279960beba6014b"
   },
   "repro/rigorous/__init__.py": {
     "bytes": 60,
