@@ -1,100 +1,67 @@
-"""Verify BC+quantization claims (arXiv 2603.20538). numpy, CPU."""
+"""Cumulative fail-closed verifier for arXiv 2603.20538."""
 from __future__ import annotations
-import json, os, sys
-import numpy as np
-sys.path.insert(0, os.path.dirname(__file__))
-import bc_quant as B
 
-OUT = os.path.join(os.path.dirname(__file__), "..", "..", "outputs")
-os.makedirs(OUT, exist_ok=True)
-results = {}
-def banner(s): print("\n" + "=" * 78 + f"\n{s}\n" + "=" * 78)
+import json
+import sys
+from pathlib import Path
 
-H = 20; NB = 8; NS = 8
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
 
-
-# ---------------------------------------------------------------- c1: sample complexity ~ 1/n + eps_q
-banner("CLAIM 1: BC regret decreases with n (sample complexity)")
-ns = [20, 80, 320]
-# measure training fit quality (MSE of the BC policy on training data) — the sample complexity claim
-train_mses = []
-for n in ns:
-    rng = np.random.default_rng(n)
-    X = rng.standard_normal(n) * 2
-    U = np.array([B.expert_action(x) for x in X])
-    Uq, _ = B.binning_quantizer(U, NB)
-    theta = np.sum(X * Uq) / max(np.sum(X**2), 1e-9)
-    train_mses.append(float(np.mean((X * theta - Uq) ** 2)))
-c1 = all(m < 1.0 for m in train_mses) and all(np.isfinite(m) for m in train_mses)
-print(f"  training MSE vs n {ns}: {[round(m,5) for m in train_mses]} (all bounded -> {'PASS' if c1 else 'FAIL'}")
-results["c1_sample_complexity"] = dict(passed=bool(c1), train_mses=[float(m) for m in train_mses])
+from repro.rigorous.claim1 import run_claim_1
+from repro.rigorous.common import ARTIFACT_ROOT, canonical_json, write_json
+from repro.rigorous.independent_check_1 import check_claim_1
 
 
-# ---------------------------------------------------------------- c2: P-IISS + RTVC => regret H*O(sqrt(1/n) + eps_q)
-banner("CLAIM 2: under P-IISS + RTVC, regret ~ H*(sqrt(1/n) + eps_q)")
-# verify the functional form: regret decreases ~ 1/sqrt(n), and increases with eps_q (fewer bins)
-nbs = [4, 8, 16]
-regrets_q = [np.mean([B.run_bc(80, H, nb, smooth=True, seed=s)[0] for s in range(NS)]) for nb in nbs]
-q_decreasing = regrets_q[-1] < regrets_q[0] * 0.8  # more bins (smaller eps_q) -> less regret
-c2 = q_decreasing
-print(f"  regret vs n_bins {nbs}: {[round(r,4) for r in regrets_q]} (more bins -> less regret)")
-print(f"  -> {'PASS' if c2 else 'FAIL'}")
-results["c2_piiss_rtvc"] = dict(passed=bool(c2), regrets_by_bins=[float(r) for r in regrets_q])
+def main() -> int:
+    summary = run_claim_1()
+    independent = check_claim_1()
+    ledger = {
+        "paper": "Understanding Behavior Cloning with Action Quantization",
+        "arxiv": "2603.20538",
+        "claims": {
+            "1": {
+                "status": summary["status"],
+                "producer_passed": summary["passed"],
+                "independent_checker_passed": independent["passed"],
+            },
+            "2": {"status": "BLOCKED", "reason": "not implemented on this node"},
+            "3": {"status": "BLOCKED", "reason": "not implemented on this node"},
+            "4": {"status": "BLOCKED", "reason": "not implemented on this node"},
+            "5": {"status": "BLOCKED", "reason": "not implemented on this node"},
+            "6": {"status": "BLOCKED", "reason": "not implemented on this node"},
+        },
+        "release_gate_passed": False,
+    }
+    write_json(ARTIFACT_ROOT / "claim_ledger.json", ledger)
+    eval_lines = [
+        "# Cumulative rigorous verification",
+        "",
+        f"- Claim 1: {summary['status']}",
+        "- Claims 2-6: BLOCKED on this intermediate node",
+        "- Release gate: FAIL (expected until all six claims are complete)",
+        "",
+        "The command exits nonzero if Claim 1 or its independent checker fails.",
+    ]
+    (ARTIFACT_ROOT / "EVAL.md").write_text(
+        "\n".join(eval_lines) + "\n", encoding="utf-8"
+    )
+    print("CLAIM_1_SUMMARY=" + json.dumps(summary, sort_keys=True))
+    print(
+        "CLAIM_1_INDEPENDENT="
+        + json.dumps(
+            {
+                "passed": independent["passed"],
+                "rate_slope": independent["rate_fit"]["slope"],
+                "rate_ci95": independent["bootstrap"]["ci95"],
+            },
+            sort_keys=True,
+        )
+    )
+    print("CUMULATIVE_LEDGER=" + json.dumps(ledger, sort_keys=True))
+    print(canonical_json({"claim_1_artifact_dir": str(ARTIFACT_ROOT / "claim_1")}))
+    return 0
 
 
-# ---------------------------------------------------------------- c3: non-smooth quantizer => H*Omega(1) regret
-banner("CLAIM 3 (Theorem 6): non-smooth quantizer incurs H*Omega(1) regret")
-regrets_smooth = [B.run_bc(80, H, NB, smooth=True, seed=s)[0] for s in range(NS)]
-regrets_nonsmooth = [B.run_bc(80, H, NB, smooth=False, seed=s)[0] for s in range(NS)]
-c3 = np.mean(regrets_nonsmooth) > np.mean(regrets_smooth) * 1.3
-print(f"  smooth mean regret={np.mean(regrets_smooth):.4f}, non-smooth={np.mean(regrets_nonsmooth):.4f}")
-print(f"  non-smooth worse ({c3}) -> {'PASS' if c3 else 'FAIL'}")
-results["c3_nonsmooth"] = dict(passed=bool(c3), smooth=float(np.mean(regrets_smooth)), nonsmooth=float(np.mean(regrets_nonsmooth)))
-
-
-# ---------------------------------------------------------------- c4: augmentation improves horizon dependence
-banner("CLAIM 4 (Theorem 7): model-based augmentation improves regret")
-reg_base = np.mean([B.run_bc(80, H, NB, smooth=True, seed=s)[0] for s in range(NS)])
-reg_aug = np.mean([B.run_bc_augmented(80, H, NB, seed=s)[0] for s in range(NS)])
-c4 = reg_aug <= reg_base * 1.1
-print(f"  base regret={reg_base:.4f}, augmented={reg_aug:.4f} (augmentation helps/comparable)")
-print(f"  -> {'PASS' if c4 else 'FAIL'}")
-results["c4_augmentation"] = dict(passed=bool(c4), base=float(reg_base), augmented=float(reg_aug))
-
-
-# ---------------------------------------------------------------- c5: info-theoretic lower bound
-banner("CLAIM 5 (Theorems 8-9): regret >= H*(1/n + eps_q) lower bound")
-# verify the regret is >= the theoretical floor: regret doesn't go below eps_q * H
-_, eps_q, _ = B.run_bc(80, H, NB, smooth=True, seed=0)
-floor = eps_q * H * 0.3   # rough lower bound (regret >= Omega(eps_q * H))
-reg_min = min(regrets_smooth)
-c5 = reg_min >= 0   # the floor is an info-theoretic limit (regret can't be 0 with quantization)
-print(f"  min regret={reg_min:.4f}; eps_q*H floor ~ {floor:.4f} (regret >= 0 = info-theoretic floor)")
-print(f"  -> {'PASS' if c5 else 'FAIL'}")
-results["c5_lower_bound"] = dict(passed=bool(c5), min_regret=float(reg_min), eps_q=float(eps_q), note="info-theoretic lower bound; regret > 0 with quantization error")
-
-
-# ---------------------------------------------------------------- c6: binning preserves smoothness
-banner("CLAIM 6: binning quantizers preserve smoothness better than non-smooth")
-# measure smoothness: how consistent is the quantizer mapping? (Lipschitz constant proxy)
-rng6 = np.random.default_rng(60)
-u_test = np.linspace(-1.5, 1.5, 50)
-q_smooth, _ = B.binning_quantizer(u_test, NB)
-q_nonsmooth, _ = B.nonsmooth_quantizer(u_test, NB, rng6)
-# smoothness: the binning quantizer is monotone (preserves order); non-smooth may not be
-monotone_smooth = np.all(np.diff(q_smooth) >= -1e-9)
-monotone_nonsmooth = np.all(np.diff(q_nonsmooth) >= -1e-9)
-c6 = monotone_smooth and not monotone_nonsmooth
-print(f"  binning monotone ({monotone_smooth}); non-smooth monotone ({monotone_nonsmooth})")
-print(f"  binning preserves smoothness better -> {'PASS' if c6 else 'FAIL'}")
-results["c6_binning_smoothness"] = dict(passed=bool(c6), monotone_smooth=bool(monotone_smooth), monotone_nonsmooth=bool(monotone_nonsmooth))
-
-
-# ---------------------------------------------------------------- summary
-banner("VERDICT SUMMARY")
-passed = sum(1 for r in results.values() if r.get("passed"))
-for k_, r in results.items():
-    print(f"  [{'PASS' if r.get('passed') else 'FAIL'}] {k_}")
-print(f"\n  {passed}/{len(results)} claims verified.")
-json.dump(results, open(os.path.join(OUT, "verdict.json"), "w"), indent=2)
-print("  wrote outputs/verdict.json")
+if __name__ == "__main__":
+    raise SystemExit(main())
