@@ -343,6 +343,7 @@ def run_claims_3_4_6() -> dict[str, dict[str, Any]]:
     }
     finite = claim4["finite_logloss_mle"]
     c4_checks = {
+        "claim3_prerequisite_verified": all(c3_checks.values()),
         "same_RTVC_violating_construction": (
             claim4["same_nonsmooth_construction_as_claim_3"]
             and not claim4["rtvc_assumed"]
@@ -400,6 +401,11 @@ def run_claims_3_4_6() -> dict[str, dict[str, Any]]:
             "passed": passed,
             "checks": checks,
         }
+        if claim == 3:
+            summary["expert_error_exponent"] = claim3[
+                "expert_error_exponent"
+            ]["slope"]
+            summary["expert_error_rows"] = claim3["epsilon_sweep"]
         write_json(target / "summary.json", summary)
         manifest = {}
         for artifact in sorted(target.iterdir()):
