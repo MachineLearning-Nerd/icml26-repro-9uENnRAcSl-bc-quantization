@@ -6,6 +6,7 @@ import time
 from typing import Any
 
 import numpy as np
+from scipy.optimize import brentq
 from scipy.special import ndtr
 
 from .common import (
@@ -24,30 +25,140 @@ LAMBDA = A + B
 Q0 = B / (1.0 - LAMBDA)
 
 
-def _safe_exp(value: float) -> float:
-    return 0.0 if value < -745.0 else math.exp(value)
+def _raw_expert_step(state: float) -> float:
+    return A * state + B * math.atan(state)
 
 
-def _expert_error_upper(epsilon: float, horizon: int) -> float:
-    baseline = ((D + 0.5) / B + K / 2.0) * epsilon
-    transient = 0.0
-    for t in range(1, horizon + 1):
-        power = t - 1
-        if power > 500:
-            continue
-        log_p1 = (
-            math.log(epsilon / math.sqrt(2.0 * math.pi))
-            - power * math.log(A)
-            - D * D * epsilon * epsilon
-            / (2.0 * LAMBDA ** (2 * power))
+def _inverse_raw_expert_step(value: float) -> tuple[float, float]:
+    """Invert the strictly increasing expert closed-loop map.
+
+    For z >= 0, A*z <= g(z) <= (A+B)*z. Oddness handles z < 0.
+    The returned residual is a machine-checkable inversion certificate.
+    """
+    if value == 0:
+        return 0.0, 0.0
+    sign = 1.0 if value > 0 else -1.0
+    target = abs(value)
+    lower = target / LAMBDA
+    upper = target / A
+    root = brentq(
+        lambda state: _raw_expert_step(state) - target,
+        lower,
+        upper,
+        xtol=5e-324,
+        rtol=1e-14,
+    )
+    root *= sign
+    return root, abs(_raw_expert_step(root) - value)
+
+
+def _normal_interval_probability(lower: float, upper: float) -> float:
+    """Stable Gaussian interval probability, including far positive tails."""
+    if lower >= 0:
+        return float(ndtr(-lower) - ndtr(-upper))
+    if upper <= 0:
+        return float(ndtr(upper) - ndtr(lower))
+    return float(ndtr(upper) - ndtr(lower))
+
+
+def _preimage_probability_sum(
+    lower: float,
+    upper: float,
+    horizon: int,
+    *,
+    symmetric: bool = False,
+) -> dict[str, float | int | list[float]]:
+    """Sum exact expert-state interval probabilities via monotone preimages."""
+    probability_sum = 0.0
+    residual_max = 0.0
+    first_probabilities: list[float] = []
+    tail_bound = 0.0
+    evaluated_steps = 0
+    for step in range(horizon):
+        probability = _normal_interval_probability(lower, upper)
+        probability_sum += probability
+        evaluated_steps += 1
+        if len(first_probabilities) < 8:
+            first_probabilities.append(probability)
+        remaining = horizon - step - 1
+        if remaining == 0:
+            break
+        if symmetric and upper >= 12.0:
+            missing = 2.0 * float(ndtr(-upper))
+            probability_sum += remaining
+            tail_bound = remaining * missing
+            break
+        if not symmetric and lower >= 12.0:
+            tail_bound = remaining * float(ndtr(-lower))
+            break
+        lower, residual_lower = _inverse_raw_expert_step(lower)
+        upper, residual_upper = _inverse_raw_expert_step(upper)
+        residual_max = max(residual_max, residual_lower, residual_upper)
+    return {
+        "probability_sum": probability_sum,
+        "probability_average": probability_sum / horizon,
+        "inverse_residual_max": residual_max,
+        "normal_tail_truncation_bound": tail_bound,
+        "evaluated_steps": evaluated_steps,
+        "first_probabilities": first_probabilities,
+    }
+
+
+def _expert_error_certificate(epsilon: float, horizon: int) -> dict[str, Any]:
+    """Bound the actual expert-distribution expectation, not a density proxy."""
+    intervals = {
+        "I_P": (-K * epsilon / 2.0, K * epsilon / 2.0),
+        "I_T1": (D * epsilon, (D + 1.0) * epsilon),
+        "I_T2": (
+            A * D * epsilon + B,
+            A * (D + 1.0) * epsilon + B,
+        ),
+    }
+    probabilities = {
+        name: _preimage_probability_sum(
+            lower,
+            upper,
+            horizon,
+            symmetric=name == "I_P",
         )
-        log_p2 = (
-            math.log(A * epsilon / math.sqrt(2.0 * math.pi))
-            - power * math.log(A)
-            - B * B / (2.0 * LAMBDA ** (2 * power))
-        )
-        transient += 2.0 * (_safe_exp(log_p1) + _safe_exp(log_p2))
-    return baseline + transient / horizon
+        for name, (lower, upper) in intervals.items()
+    }
+    q_ip = ((D + 0.5) / B) * epsilon
+    q_it2 = ((D + 1.0) * (1.0 - A * A) / B) * epsilon - A
+    error_suprema = {
+        "I_P": max(
+            abs(q_ip - math.atan(intervals["I_P"][0])),
+            abs(q_ip - math.atan(intervals["I_P"][1])),
+        ),
+        "I_T1": max(
+            abs(1.0 - math.atan(intervals["I_T1"][0])),
+            abs(1.0 - math.atan(intervals["I_T1"][1])),
+        ),
+        "I_T2": max(
+            abs(q_it2 - math.atan(intervals["I_T2"][0])),
+            abs(q_it2 - math.atan(intervals["I_T2"][1])),
+        ),
+    }
+    # Outside the three trigger intervals choose the explicit valid
+    # delta(x)=-epsilon/2. Adding its global epsilon/2 bound and then the
+    # trigger contributions overcounts on triggers and is therefore rigorous.
+    expectation_upper = epsilon / 2.0 + sum(
+        error_suprema[name] * probabilities[name]["probability_average"]
+        for name in intervals
+    )
+    return {
+        "expectation_upper": expectation_upper,
+        "expectation_upper_over_epsilon": expectation_upper / epsilon,
+        "intervals": {name: list(bounds) for name, bounds in intervals.items()},
+        "probability_certificates": probabilities,
+        "trigger_error_suprema": error_suprema,
+        "outside_trigger_delta": -epsilon / 2.0,
+        "method": (
+            "Invert the monotone raw-expert recursion at every interval "
+            "endpoint, evaluate exact Gaussian preimage masses, and combine "
+            "them with interval-wise quantization-error suprema."
+        ),
+    }
 
 
 def _adversarial_regret_lower(epsilon: float, horizon: int) -> float:
@@ -63,17 +174,21 @@ def _adversarial_regret_lower(epsilon: float, horizon: int) -> float:
 
 
 def _claim3_raw() -> dict[str, Any]:
-    epsilons = [2.0 ** (-power) for power in range(5, 11)]
+    epsilons = [2.0 ** (-power) for power in range(5, 13)]
     epsilon_rows = []
     for epsilon in epsilons:
-        horizon = max(2048, math.ceil(512.0 * abs(math.log(epsilon))))
+        log_inverse = abs(math.log(epsilon))
+        horizon = math.ceil(64.0 * log_inverse * log_inverse)
+        certificate = _expert_error_certificate(epsilon, horizon)
         epsilon_rows.append(
             {
                 "epsilon_q": epsilon,
                 "horizon": horizon,
-                "expert_one_step_error_upper": _expert_error_upper(
-                    epsilon, horizon
-                ),
+                "H_over_abs_log_epsilon": horizon / log_inverse,
+                "expert_one_step_error_upper": certificate[
+                    "expectation_upper"
+                ],
+                "expert_error_certificate": certificate,
                 "deployed_regret_lower": _adversarial_regret_lower(
                     epsilon, horizon
                 ),
@@ -148,6 +263,10 @@ def _claim3_raw() -> dict[str, Any]:
             "regret_per_H_upper": [epsilon / 2 for epsilon in epsilons],
             "description": "Removing the three exceptional pieces removes the floor.",
         },
+        "asymptotic_schedule": (
+            "H=ceil(64*|log(epsilon_q)|^2), hence "
+            "H/|log(epsilon_q)| tends to infinity."
+        ),
     }
 
 
@@ -325,6 +444,30 @@ def run_claims_3_4_6() -> dict[str, dict[str, Any]]:
     claim6 = _claim6_raw()
     c3_checks = {
         "all_parameter_conditions": all(claim3["parameters"]["conditions"].values()),
+        "H_is_omega_log_on_sweep": all(
+            later["H_over_abs_log_epsilon"]
+            > earlier["H_over_abs_log_epsilon"]
+            for earlier, later in zip(
+                claim3["epsilon_sweep"],
+                claim3["epsilon_sweep"][1:],
+            )
+        ),
+        "preimage_inverse_certified": max(
+            certificate["inverse_residual_max"]
+            for row in claim3["epsilon_sweep"]
+            for certificate in row["expert_error_certificate"][
+                "probability_certificates"
+            ].values()
+        )
+        < 1e-12,
+        "normal_tail_error_negligible": max(
+            certificate["normal_tail_truncation_bound"]
+            for row in claim3["epsilon_sweep"]
+            for certificate in row["expert_error_certificate"][
+                "probability_certificates"
+            ].values()
+        )
+        < 1e-20,
         "expert_error_O_epsilon": 0.75
         <= claim3["expert_error_exponent"]["slope"]
         <= 1.25,

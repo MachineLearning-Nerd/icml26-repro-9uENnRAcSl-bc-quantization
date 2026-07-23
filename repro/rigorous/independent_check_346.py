@@ -14,6 +14,35 @@ def check_claims_3_4_6() -> dict[str, Any]:
         "claim3_parameter_inequalities": all(
             raw3["parameters"]["conditions"].values()
         ),
+        "claim3_actual_expectation_bound": all(
+            row["expert_error_certificate"]["method"].startswith(
+                "Invert the monotone raw-expert recursion"
+            )
+            and row["expert_one_step_error_upper"]
+            == row["expert_error_certificate"]["expectation_upper"]
+            for row in raw3["epsilon_sweep"]
+        ),
+        "claim3_omega_log_schedule": all(
+            later["H_over_abs_log_epsilon"]
+            > earlier["H_over_abs_log_epsilon"]
+            for earlier, later in zip(
+                raw3["epsilon_sweep"],
+                raw3["epsilon_sweep"][1:],
+            )
+        ),
+        "claim3_numerical_certificate": all(
+            certificate["inverse_residual_max"] < 1e-12
+            and certificate["normal_tail_truncation_bound"] < 1e-20
+            for row in raw3["epsilon_sweep"]
+            for certificate in row["expert_error_certificate"][
+                "probability_certificates"
+            ].values()
+        ),
+        "claim3_uniform_linear_constant": max(
+            row["expert_one_step_error_upper"] / row["epsilon_q"]
+            for row in raw3["epsilon_sweep"]
+        )
+        < 20,
         "claim3_floor_last_three": min(
             raw3["horizon_sweep"]["regret_per_H"][-3:]
         )
