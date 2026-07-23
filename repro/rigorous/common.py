@@ -64,7 +64,11 @@ def linear_fit(x: Iterable[float], y: Iterable[float]) -> dict[str, float]:
     fitted = intercept + slope * x_arr
     residual = float(np.sum((y_arr - fitted) ** 2))
     total = float(np.sum((y_arr - np.mean(y_arr)) ** 2))
-    r2 = 1.0 if total == 0.0 and residual == 0.0 else 1.0 - residual / total
+    tolerance = np.finfo(float).eps * max(float(np.sum(y_arr**2)), 1.0)
+    if total <= tolerance:
+        r2 = 1.0 if residual <= tolerance else 0.0
+    else:
+        r2 = 1.0 - residual / total
     return {
         "slope": float(slope),
         "intercept": float(intercept),
