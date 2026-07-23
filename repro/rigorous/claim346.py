@@ -33,6 +33,8 @@ def _expert_error_upper(epsilon: float, horizon: int) -> float:
     transient = 0.0
     for t in range(1, horizon + 1):
         power = t - 1
+        if power > 500:
+            continue
         log_p1 = (
             math.log(epsilon / math.sqrt(2.0 * math.pi))
             - power * math.log(A)
@@ -52,6 +54,9 @@ def _adversarial_regret_lower(epsilon: float, horizon: int) -> float:
     total = 0.0
     for h in range(2, horizon + 1):
         power = h - 2
+        if power > 500:
+            total += A * 0.5
+            continue
         rho = (K / 2.0 - Q0 * (1.0 - LAMBDA**power)) / LAMBDA**power
         total += A * (float(ndtr(rho * epsilon)) - 0.5)
     return total
@@ -61,7 +66,7 @@ def _claim3_raw() -> dict[str, Any]:
     epsilons = [2.0 ** (-power) for power in range(5, 11)]
     epsilon_rows = []
     for epsilon in epsilons:
-        horizon = max(128, math.ceil(64.0 * abs(math.log(epsilon))))
+        horizon = max(2048, math.ceil(512.0 * abs(math.log(epsilon))))
         epsilon_rows.append(
             {
                 "epsilon_q": epsilon,
