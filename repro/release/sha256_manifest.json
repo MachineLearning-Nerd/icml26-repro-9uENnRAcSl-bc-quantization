@@ -424,8 +424,8 @@
     "sha256": "a2ba223b394052e38c4db0ce4998d9f77a56fd7f9cfb583c3eb2a84a1aafb093"
   },
   "repro/release/validate_release.py": {
-    "bytes": 5772,
-    "sha256": "ba29cb73c091165c9f4495a7963a811af525c1e3960ef742bde29e8ec4b9223a"
+    "bytes": 5838,
+    "sha256": "bbc8f2f676f9eace99d3e19af47c78d01e00a749ff4126756fd5c098c6262ad0"
   },
   "repro/rigorous/__init__.py": {
     "bytes": 60,

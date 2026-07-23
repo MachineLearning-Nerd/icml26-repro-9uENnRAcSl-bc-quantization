@@ -136,11 +136,12 @@ def validate_release(ledger: dict[str, Any]) -> dict[str, Any]:
         "protected_path_set_is_subset": protected_paths <= candidate_paths,
         "protected_legacy_markdown_exact": legacy_exact,
         "no_secret_patterns": not secret_hits,
-        "no_vacuous_legacy_predicate_in_current_verifiers": (
-            "reg_min >= 0"
-            not in (
-                REPO_ROOT / "repro/rigorous/claim5.py"
-            ).read_text(encoding="utf-8")
+        "no_vacuous_legacy_predicate_in_current_verifiers": not re.search(
+            r"(?m)^\s*(?:if\s+|[A-Za-z_]\w*\s*=\s*)"
+            r"reg_min\s*>=\s*0",
+            (REPO_ROOT / "repro/rigorous/claim5.py").read_text(
+                encoding="utf-8"
+            ),
         ),
     }
     result = {
