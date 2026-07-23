@@ -9,26 +9,48 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from repro.rigorous.claim1 import run_claim_1
+from repro.rigorous.claim2 import run_claim_2
+from repro.rigorous.claim5 import run_claim_5
 from repro.rigorous.common import ARTIFACT_ROOT, canonical_json, write_json
 from repro.rigorous.independent_check_1 import check_claim_1
+from repro.rigorous.independent_check_2 import check_claim_2
+from repro.rigorous.independent_check_5 import check_claim_5
 
 
 def main() -> int:
-    summary = run_claim_1()
-    independent = check_claim_1()
+    summaries = {
+        "1": run_claim_1(),
+        "2": run_claim_2(),
+        "5": run_claim_5(),
+    }
+    independent = {
+        "1": check_claim_1(),
+        "2": check_claim_2(),
+        "5": check_claim_5(),
+    }
     ledger = {
         "paper": "Understanding Behavior Cloning with Action Quantization",
         "arxiv": "2603.20538",
         "claims": {
             "1": {
-                "status": summary["status"],
-                "producer_passed": summary["passed"],
-                "independent_checker_passed": independent["passed"],
+                "status": summaries["1"]["status"],
+                "producer_passed": summaries["1"]["passed"],
+                "independent_checker_passed": independent["1"]["passed"],
             },
-            "2": {"status": "BLOCKED", "reason": "not implemented on this node"},
+            "2": {
+                "status": summaries["2"]["status"],
+                "producer_passed": summaries["2"]["passed"],
+                "independent_checker_passed": independent["2"]["passed"],
+            },
             "3": {"status": "BLOCKED", "reason": "not implemented on this node"},
             "4": {"status": "BLOCKED", "reason": "not implemented on this node"},
-            "5": {"status": "BLOCKED", "reason": "not implemented on this node"},
+            "5": {
+                "status": summaries["5"]["status"],
+                "theorem_8_status": summaries["5"]["theorem_8_status"],
+                "theorem_9_status": summaries["5"]["theorem_9_status"],
+                "producer_passed": summaries["5"]["passed"],
+                "independent_checker_passed": independent["5"]["passed"],
+            },
             "6": {"status": "BLOCKED", "reason": "not implemented on this node"},
         },
         "release_gate_passed": False,
@@ -37,30 +59,51 @@ def main() -> int:
     eval_lines = [
         "# Cumulative rigorous verification",
         "",
-        f"- Claim 1: {summary['status']}",
-        "- Claims 2-6: BLOCKED on this intermediate node",
+        f"- Claim 1: {summaries['1']['status']}",
+        f"- Claim 2: {summaries['2']['status']}",
+        "- Claims 3, 4, and 6: BLOCKED on this intermediate node",
+        f"- Claim 5: {summaries['5']['status']} "
+        f"(Theorem 8: {summaries['5']['theorem_8_status']}; "
+        f"Theorem 9: {summaries['5']['theorem_9_status']})",
         "- Release gate: FAIL (expected until all six claims are complete)",
         "",
-        "The command exits nonzero if Claim 1 or its independent checker fails.",
+        "The command exits nonzero if any implemented claim or independent "
+        "checker fails.",
     ]
     (ARTIFACT_ROOT / "EVAL.md").write_text(
         "\n".join(eval_lines) + "\n", encoding="utf-8"
     )
-    print("CLAIM_1_SUMMARY=" + json.dumps(summary, sort_keys=True))
+    for claim in ["1", "2", "5"]:
+        print(
+            f"CLAIM_{claim}_SUMMARY="
+            + json.dumps(summaries[claim], sort_keys=True)
+        )
+        print(
+            f"CLAIM_{claim}_INDEPENDENT="
+            + json.dumps(
+                {
+                    "passed": independent[claim]["passed"],
+                    "checks": independent[claim]["checks"],
+                },
+                sort_keys=True,
+            )
+        )
+    print("CUMULATIVE_LEDGER=" + json.dumps(ledger, sort_keys=True))
     print(
-        "CLAIM_1_INDEPENDENT="
-        + json.dumps(
+        canonical_json(
             {
-                "passed": independent["passed"],
-                "rate_slope": independent["rate_fit"]["slope"],
-                "rate_ci95": independent["bootstrap"]["ci95"],
-            },
-            sort_keys=True,
+                "artifact_dirs": {
+                    claim: str(ARTIFACT_ROOT / f"claim_{claim}")
+                    for claim in ["1", "2", "5"]
+                }
+            }
         )
     )
-    print("CUMULATIVE_LEDGER=" + json.dumps(ledger, sort_keys=True))
-    print(canonical_json({"claim_1_artifact_dir": str(ARTIFACT_ROOT / "claim_1")}))
-    return 0
+    implemented_passed = all(
+        summaries[claim]["passed"] and independent[claim]["passed"]
+        for claim in ["1", "2", "5"]
+    )
+    return 0 if implemented_passed else 1
 
 
 if __name__ == "__main__":

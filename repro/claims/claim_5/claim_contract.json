@@ -1,0 +1,17 @@
+{
+  "claim": 5,
+  "subclaims": ["Theorem 8 deterministic expert", "Theorem 9 stochastic expert"],
+  "paper_anchors": [
+    "https://ar5iv.labs.arxiv.org/html/2603.20538#Thmtheorem8",
+    "https://ar5iv.labs.arxiv.org/html/2603.20538#Thmtheorem9"
+  ],
+  "paper_sha256": "a1517e403f96e5c0c3529bbf8fcf3d8fad29b3149f164added02036f3318f0e1",
+  "required_checks": {
+    "theorem_8": "Exact Hellinger/product-TV identities, nonzero H/n Le Cam lower bound, and Appendix E.1 bin collisions yielding H epsilon_q.",
+    "theorem_9": "Exact finite binomial TV enumeration, probability at least 1/8, H/sqrt(n) threshold, and additive H epsilon_q collision shift.",
+    "assumptions": "Record non-anticipatory quantifier, expert type, Lipschitz reward/policy conditions, and gamma(r)=r_1 P-IISS.",
+    "controls": "Reject Delta=0, break collisions with half-width bins, and resolve the legacy 3.0 versus 0.0247 contradiction.",
+    "independent_checker": "Use a second exact upper-tail formula for every stochastic product TV."
+  },
+  "decision": "VERIFIED only if both theorem subclaims and every non-vacuity control pass; otherwise BLOCKED."
+}

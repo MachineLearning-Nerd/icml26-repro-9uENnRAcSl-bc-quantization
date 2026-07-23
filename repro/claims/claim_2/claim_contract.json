@@ -1,0 +1,15 @@
+{
+  "claim": 2,
+  "paper_anchor": "https://ar5iv.labs.arxiv.org/html/2603.20538#Thmtheorem3",
+  "paper_sha256": "a1517e403f96e5c0c3529bbf8fcf3d8fad29b3149f164added02036f3318f0e1",
+  "status_vocabulary": ["VERIFIED", "FALSIFIED", "BLOCKED"],
+  "required_checks": {
+    "assumptions": "Certify deterministic q#pi*, binning, realizability, RTVC, and global P-IISS.",
+    "horizon": "At least six geometric H values spanning a factor of 32.",
+    "stable": "Exact stable propagation is polynomial and fits a power model materially better than an exponential model.",
+    "unstable_control": "An alpha=2 negative control violates horizon-independent P-IISS and fits exponential growth.",
+    "epsilon": "At least seven epsilon_q values are varied independently of H and yield exponent one.",
+    "independent_checker": "A separate rational-recurrence implementation must reproduce the decisive values and model selection."
+  },
+  "decision": "VERIFIED only if every required check and the independent checker pass; otherwise BLOCKED."
+}
