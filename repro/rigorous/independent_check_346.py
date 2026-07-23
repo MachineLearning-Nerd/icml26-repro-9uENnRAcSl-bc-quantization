@@ -65,10 +65,43 @@ def check_claims_3_4_6() -> dict[str, Any]:
             == 3
             and all(row["includes_log_M"] for row in raw4["complete_formula_sweep"])
         ),
+        "claim4_not_formula_only": (
+            "not a formula evaluation" in raw4["product_construction"]
+            and all(
+                abs(
+                    row["observed_product_MDP_regret"]
+                    - row["observed_statistical_component"]
+                    - row["observed_quantization_component"]
+                )
+                < 1e-10
+                for row in raw4["complete_product_construction_sweep"]
+            )
+        ),
+        "claim4_direct_rollout_convergence": max(
+            row["last_refinement_difference"]
+            for row in raw4["direct_augmented_rollouts"][
+                "factorial_rows"
+            ]
+        )
+        < 5e-3,
+        "claim4_direct_rollout_certificate": all(
+            row["augmented_below_certified_upper"]
+            for row in raw4["direct_augmented_rollouts"]["factorial_rows"]
+        ),
+        "claim4_finite_mle_has_confidence_intervals": all(
+            row["ci95"][0]
+            < row["mean_operational_TV_regret_per_step"]
+            < row["ci95"][1]
+            for row in raw4["finite_logloss_mle"]["rows"]
+        ),
         "claim4_broken_realizability": raw4["broken_realizability_control"][
             "normalized_regret_floor"
         ]
-        > 0,
+        > 0
+        and raw4["broken_realizability_control"][
+            "largest_n_smallest_epsilon_ratio_to_claimed_scale"
+        ]
+        > 1,
         "claim6_binning_pair_counts": sum(
             row["pair_count"] for row in raw6["binning_pairs"]
         )

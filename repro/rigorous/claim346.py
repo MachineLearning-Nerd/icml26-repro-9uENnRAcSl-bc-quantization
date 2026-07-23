@@ -7,7 +7,7 @@ from typing import Any
 
 import numpy as np
 from scipy.optimize import brentq
-from scipy.special import ndtr
+from scipy.special import ndtr, ndtri
 
 from .common import (
     ARTIFACT_ROOT,
@@ -281,32 +281,218 @@ def _finite_logloss_sweep() -> dict[str, Any]:
             for ki, size in enumerate(sizes):
                 policy = rng.binomial(n, 0.5, size=int(size)) / n
                 model = rng.binomial(n, 0.5, size=int(size)) / n
-                errors[si, ni, ki] = max(
-                    np.max(np.abs(policy - 0.5)),
-                    np.max(np.abs(model - 0.5)),
+                errors[si, ni, ki] = (
+                    np.max(np.abs(policy - 0.5))
+                    + np.max(np.abs(model - 0.5))
                 )
     means = errors.mean(axis=0)
+    ci_half_widths = (
+        1.96 * errors.std(axis=0, ddof=1) / math.sqrt(len(seeds))
+    )
     n_fit = loglog_fit(n_values, means[:, -1])
     class_fit = linear_fit(np.log(sizes * sizes), means[-1, :] ** 2)
+    rows = [
+        {
+            "n": int(n),
+            "|Pi|": int(size),
+            "|M|": int(size),
+            "mean_operational_TV_regret_per_step": float(means[ni, ki]),
+            "ci95": [
+                float(means[ni, ki] - ci_half_widths[ni, ki]),
+                float(means[ni, ki] + ci_half_widths[ni, ki]),
+            ],
+            "finite_class_rate": math.sqrt(
+                (
+                    math.log(float(size))
+                    + math.log(float(size))
+                )
+                / float(n)
+            ),
+        }
+        for ni, n in enumerate(n_values)
+        for ki, size in enumerate(sizes)
+    ]
     return {
         "n": n_values.tolist(),
         "class_sizes_policy_and_model": sizes.tolist(),
         "seeds": seeds,
-        "mean_joint_uniform_logloss_parameter_error": means.tolist(),
+        "mean_joint_operational_TV_regret": means.tolist(),
+        "rows": rows,
         "n_exponent_at_largest_classes": n_fit,
         "squared_error_vs_log_Pi_times_M": class_fit,
+        "construction": (
+            "For every member of finite policy and transition classes, fit "
+            "a Bernoulli(1/2) conditional by exact log-loss MLE. The maximum "
+            "policy TV error plus maximum model TV error is the per-step "
+            "bounded-reward regret of the finite-class product component."
+        ),
+    }
+
+
+def _piecewise_quantized_action(
+    states: np.ndarray, epsilon: float
+) -> np.ndarray:
+    actions = np.arctan(states) - epsilon / 2.0
+    ip = np.abs(states) <= K * epsilon / 2.0
+    it1 = (states >= D * epsilon) & (
+        states <= (D + 1.0) * epsilon
+    )
+    it2 = (states >= A * D * epsilon + B) & (
+        states <= A * (D + 1.0) * epsilon + B
+    )
+    actions[ip] = ((D + 0.5) / B) * epsilon
+    actions[it1] = 1.0
+    actions[it2] = (
+        ((D + 1.0) * (1.0 - A * A) / B) * epsilon - A
+    )
+    return actions
+
+
+def _deterministic_rollout_quadrature(
+    epsilon: float, horizon: int, resolution: int
+) -> dict[str, float | int]:
+    probabilities = (np.arange(resolution, dtype=float) + 0.5) / resolution
+    initial = ndtri(probabilities)
+    auxiliary = initial.copy()
+    deployed_augmented = initial.copy()
+    deployed_feedback = initial.copy()
+    augmented_regret = 0.0
+    feedback_regret = 0.0
+    for _ in range(horizon):
+        auxiliary_actions = _piecewise_quantized_action(
+            auxiliary, epsilon
+        )
+        feedback_actions = _piecewise_quantized_action(
+            deployed_feedback, epsilon
+        )
+        augmented_regret += float(
+            np.mean(
+                np.abs(
+                    auxiliary_actions - np.arctan(deployed_augmented)
+                )
+            )
+        )
+        feedback_regret += float(
+            np.mean(
+                np.abs(
+                    feedback_actions - np.arctan(deployed_feedback)
+                )
+            )
+        )
+        auxiliary = A * auxiliary + B * np.arctan(auxiliary)
+        deployed_augmented = (
+            A * deployed_augmented + B * auxiliary_actions
+        )
+        deployed_feedback = (
+            A * deployed_feedback + B * feedback_actions
+        )
+    return {
+        "resolution": resolution,
+        "augmented_regret": augmented_regret,
+        "augmented_regret_per_H": augmented_regret / horizon,
+        "feedback_regret": feedback_regret,
+        "feedback_regret_per_H": feedback_regret / horizon,
+    }
+
+
+def _augmentation_rollout_sweep() -> dict[str, Any]:
+    rows = []
+    resolutions = [8192, 16384, 32768]
+    for epsilon in [1 / 32, 1 / 128, 1 / 512]:
+        for horizon in [32, 128, 512]:
+            runs = [
+                _deterministic_rollout_quadrature(
+                    epsilon, horizon, resolution
+                )
+                for resolution in resolutions
+            ]
+            error = _expert_error_certificate(epsilon, horizon)
+            stability_upper = (
+                1.0 + B / (1.0 - A)
+            ) * error["expectation_upper"]
+            rows.append(
+                {
+                    "epsilon_q_nominal": epsilon,
+                    "H": horizon,
+                    "quadrature": runs,
+                    "last_refinement_difference": abs(
+                        runs[-1]["augmented_regret_per_H"]
+                        - runs[-2]["augmented_regret_per_H"]
+                    ),
+                    "actual_expert_error_upper": error[
+                        "expectation_upper"
+                    ],
+                    "P_EIISS_augmented_regret_per_H_upper": stability_upper,
+                    "augmented_below_certified_upper": (
+                        runs[-1]["augmented_regret_per_H"]
+                        <= stability_upper + 5e-4
+                    ),
+                }
+            )
+    epsilon_schedule = []
+    for epsilon in [2.0 ** (-power) for power in range(5, 11)]:
+        horizon = math.ceil(64.0 * abs(math.log(epsilon)) ** 2)
+        run = _deterministic_rollout_quadrature(
+            epsilon, horizon, resolutions[-1]
+        )
+        epsilon_schedule.append(
+            {
+                "epsilon_q": epsilon,
+                "H": horizon,
+                **run,
+            }
+        )
+    return {
+        "factorial_rows": rows,
+        "epsilon_schedule": epsilon_schedule,
+        "augmented_epsilon_exponent": loglog_fit(
+            [row["epsilon_q"] for row in epsilon_schedule],
+            [row["augmented_regret_per_H"] for row in epsilon_schedule],
+        ),
+        "feedback_floor": min(
+            row["feedback_regret_per_H"]
+            for row in epsilon_schedule[-3:]
+        ),
+        "quadrature_design": (
+            "Deterministic midpoint integration in Gaussian quantile space; "
+            "three nested resolutions are published for convergence."
+        ),
     }
 
 
 def _claim4_raw(claim3: dict[str, Any]) -> dict[str, Any]:
     finite = _finite_logloss_sweep()
+    rollout = _augmentation_rollout_sweep()
+    finite_lookup = {
+        (row["n"], row["|Pi|"]): row
+        for row in finite["rows"]
+    }
+    quantization_lookup = {
+        (row["H"], row["epsilon_q_nominal"]): row
+        for row in rollout["factorial_rows"]
+    }
     rows = []
     for horizon in [32, 128, 512]:
         for n in [64, 1024, 16384]:
             for epsilon in [1 / 32, 1 / 128, 1 / 512]:
                 for size in [2, 32, 128]:
-                    stat = math.sqrt(math.log(size * size) / n)
-                    complete_formula = horizon * (stat + epsilon)
+                    finite_row = finite_lookup[(n, size)]
+                    quantization_row = quantization_lookup[
+                        (horizon, epsilon)
+                    ]
+                    statistical_regret = finite_row[
+                        "mean_operational_TV_regret_per_step"
+                    ]
+                    quantization_regret = quantization_row["quadrature"][-1][
+                        "augmented_regret_per_H"
+                    ]
+                    observed_product_regret = horizon * (
+                        statistical_regret + quantization_regret
+                    )
+                    theorem_scale = horizon * (
+                        finite_row["finite_class_rate"]
+                        + quantization_row["actual_expert_error_upper"]
+                    )
                     rows.append(
                         {
                             "H": horizon,
@@ -314,7 +500,17 @@ def _claim4_raw(claim3: dict[str, Any]) -> dict[str, Any]:
                             "epsilon_q": epsilon,
                             "|Pi|": size,
                             "|M|": size,
-                            "complete_theorem_scale": complete_formula,
+                            "observed_product_MDP_regret": observed_product_regret,
+                            "observed_statistical_component": (
+                                horizon * statistical_regret
+                            ),
+                            "observed_quantization_component": (
+                                horizon * quantization_regret
+                            ),
+                            "complete_theorem_scale": theorem_scale,
+                            "observed_to_theorem_scale_ratio": (
+                                observed_product_regret / theorem_scale
+                            ),
                             "includes_log_M": True,
                         }
                     )
@@ -330,12 +526,28 @@ def _claim4_raw(claim3: dict[str, Any]) -> dict[str, Any]:
             }
             for row in claim3["epsilon_sweep"]
         ],
+        "direct_augmented_rollouts": rollout,
         "finite_logloss_mle": finite,
+        "complete_product_construction_sweep": rows,
         "complete_formula_sweep": rows,
+        "product_construction": (
+            "Take the product of the non-smooth Theorem-6 scalar system and "
+            "the finite Bernoulli policy/model MLE component. Add their "
+            "bounded rewards. The observed regret is therefore the sum of "
+            "two directly simulated/estimated operational regrets, not a "
+            "formula evaluation."
+        ),
         "broken_realizability_control": {
             "model_bias": 0.1,
             "normalized_regret_floor": 0.1,
             "does_not_vanish_with_n_or_epsilon": True,
+            "largest_n_smallest_epsilon_ratio_to_claimed_scale": (
+                0.1
+                / (
+                    math.sqrt(math.log(128 * 128) / 16384)
+                    + 1 / 512
+                )
+            ),
         },
     }
 
@@ -485,11 +697,25 @@ def run_claims_3_4_6() -> dict[str, dict[str, Any]]:
         <= 1e-8,
     }
     finite = claim4["finite_logloss_mle"]
+    direct = claim4["direct_augmented_rollouts"]
     c4_checks = {
         "claim3_prerequisite_verified": all(c3_checks.values()),
         "same_RTVC_violating_construction": (
             claim4["same_nonsmooth_construction_as_claim_3"]
             and not claim4["rtvc_assumed"]
+        ),
+        "direct_augmented_epsilon_rate": 0.7
+        <= direct["augmented_epsilon_exponent"]["slope"]
+        <= 1.3,
+        "direct_feedback_retains_floor": direct["feedback_floor"] >= 0.05,
+        "quadrature_converged": max(
+            row["last_refinement_difference"]
+            for row in direct["factorial_rows"]
+        )
+        < 5e-3,
+        "all_direct_rollouts_below_stability_certificate": all(
+            row["augmented_below_certified_upper"]
+            for row in direct["factorial_rows"]
         ),
         "finite_n_minus_half": -0.62
         <= finite["n_exponent_at_largest_classes"]["slope"]
@@ -499,9 +725,18 @@ def run_claims_3_4_6() -> dict[str, dict[str, Any]]:
             and finite["squared_error_vs_log_Pi_times_M"]["r2"] > 0.9
         ),
         "full_factorial_formula_sweep": len(claim4["complete_formula_sweep"]) == 81,
+        "factorial_points_are_operational": all(
+            row["observed_product_MDP_regret"] > 0
+            and 0 < row["observed_to_theorem_scale_ratio"] < 5
+            for row in claim4["complete_product_construction_sweep"]
+        ),
         "broken_model_control": claim4["broken_realizability_control"][
             "does_not_vanish_with_n_or_epsilon"
-        ],
+        ]
+        and claim4["broken_realizability_control"][
+            "largest_n_smallest_epsilon_ratio_to_claimed_scale"
+        ]
+        > 1,
     }
     c6_checks = {
         "source_falsification": claim6["source_result"]["status"] == "FALSIFIED",
