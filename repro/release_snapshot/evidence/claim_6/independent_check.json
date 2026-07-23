@@ -1,0 +1,25 @@
+{
+  "checker": "independent raw-table structural and limit checks",
+  "checks": {
+    "claim3_actual_expectation_bound": true,
+    "claim3_floor_last_three": true,
+    "claim3_numerical_certificate": true,
+    "claim3_omega_log_schedule": true,
+    "claim3_parameter_inequalities": true,
+    "claim3_smooth_vanishes": true,
+    "claim3_uniform_linear_constant": true,
+    "claim4_all_axes": true,
+    "claim4_broken_realizability": true,
+    "claim4_direct_rollout_certificate": true,
+    "claim4_direct_rollout_convergence": true,
+    "claim4_finite_mle_has_confidence_intervals": true,
+    "claim4_not_formula_only": true,
+    "claim6_binning_pair_counts": true,
+    "claim6_binning_zero": true,
+    "claim6_exhaustive_multiresolution_pairs": true,
+    "claim6_learned_persistent": true,
+    "claim6_source_is_literal_falsification": true,
+    "claim6_stochastic_actual_categorical_TV": true
+  },
+  "passed": true
+}

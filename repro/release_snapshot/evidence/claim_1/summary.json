@@ -1,0 +1,16 @@
+{
+  "claim": 1,
+  "finite_class_squared_log_fit_r2": 0.9985633024304974,
+  "git_sha": "ca81069980d0373357ee1bdc675c059c4a56872c",
+  "negative_control_wrong_rate_slope": -1.0000000000000002,
+  "negative_control_zero_slope": 4.541697680359919e-17,
+  "passed": true,
+  "quantization_floor_exponent": 1.0000000000000004,
+  "rate_ci95": [
+    -0.5153793280224277,
+    -0.4822950065506813
+  ],
+  "rate_slope": -0.4991930148622723,
+  "runtime_seconds": 0.2944203750230372,
+  "status": "VERIFIED"
+}

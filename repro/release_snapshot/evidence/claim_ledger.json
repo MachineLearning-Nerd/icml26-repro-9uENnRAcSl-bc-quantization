@@ -1,0 +1,39 @@
+{
+  "arxiv": "2603.20538",
+  "claims": {
+    "1": {
+      "independent_checker_passed": true,
+      "producer_passed": true,
+      "status": "VERIFIED"
+    },
+    "2": {
+      "independent_checker_passed": true,
+      "producer_passed": true,
+      "status": "VERIFIED"
+    },
+    "3": {
+      "independent_checker_passed": true,
+      "producer_passed": true,
+      "status": "VERIFIED"
+    },
+    "4": {
+      "independent_checker_passed": true,
+      "producer_passed": true,
+      "status": "VERIFIED"
+    },
+    "5": {
+      "independent_checker_passed": true,
+      "producer_passed": true,
+      "status": "VERIFIED",
+      "theorem_8_status": "VERIFIED",
+      "theorem_9_status": "VERIFIED"
+    },
+    "6": {
+      "independent_checker_passed": true,
+      "producer_passed": true,
+      "status": "FALSIFIED"
+    }
+  },
+  "paper": "Understanding Behavior Cloning with Action Quantization",
+  "release_gate_passed": true
+}

@@ -1,0 +1,34 @@
+{
+  "claim_contract.json": {
+    "bytes": 1032,
+    "sha256": "6e84b0e8237cabcad9f86aa3533c93e384626fbcf2d7035be43ac622482c1963"
+  },
+  "method.md": {
+    "bytes": 1354,
+    "sha256": "82c1e355b65d8e29d246e68c324e0eb666fbee0177b7fb756d0370c781f98eb9"
+  },
+  "negative_controls.json": {
+    "bytes": 2876,
+    "sha256": "7b80a8cc9d3201c2b0487af5ae48b97956c05ad7289a0e83abfcab9fa5f4349b"
+  },
+  "provenance.json": {
+    "bytes": 382,
+    "sha256": "03797c5a612ba74aa68abba5f5dc11aac0cc92788a8e31d8191de4f4a18020fb"
+  },
+  "raw_results.json": {
+    "bytes": 10179,
+    "sha256": "c1947e95b12874098b151f555bf5fafd9c4ce5880c8c6850a88cf32e64bef65d"
+  },
+  "source_audit.md": {
+    "bytes": 1197,
+    "sha256": "f14cd58c8ad5bb2af8a98a4957976d911592415891f95a60ed44ea5fa11405b0"
+  },
+  "status.json": {
+    "bytes": 392,
+    "sha256": "dda1f48e20b2385d451468400789347d70e06d1339aec3ce0a9bde5140ac172e"
+  },
+  "summary.json": {
+    "bytes": 441,
+    "sha256": "a1c0b5b9beaaaca88e63e80120cb8b2deaa35691de4341f4d85583c3aaec2717"
+  }
+}

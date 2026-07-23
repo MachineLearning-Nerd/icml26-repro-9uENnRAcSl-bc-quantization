@@ -1,0 +1,64 @@
+{
+  "broken_bin_width": [
+    {
+      "bins": 16,
+      "epsilon_q": {
+        "decimal": 0.125,
+        "denominator": 8,
+        "numerator": 1
+      },
+      "q_0_equals_q_epsilon": false
+    },
+    {
+      "bins": 32,
+      "epsilon_q": {
+        "decimal": 0.0625,
+        "denominator": 16,
+        "numerator": 1
+      },
+      "q_0_equals_q_epsilon": false
+    },
+    {
+      "bins": 64,
+      "epsilon_q": {
+        "decimal": 0.03125,
+        "denominator": 32,
+        "numerator": 1
+      },
+      "q_0_equals_q_epsilon": false
+    },
+    {
+      "bins": 128,
+      "epsilon_q": {
+        "decimal": 0.015625,
+        "denominator": 64,
+        "numerator": 1
+      },
+      "q_0_equals_q_epsilon": false
+    },
+    {
+      "bins": 256,
+      "epsilon_q": {
+        "decimal": 0.0078125,
+        "denominator": 128,
+        "numerator": 1
+      },
+      "q_0_equals_q_epsilon": false
+    }
+  ],
+  "legacy_vacuous_assertion": {
+    "conclusion": "Not a theorem counterexample. Theorem 8/9 are existential hard-instance statements, while the legacy run used an unrelated smooth simulation. The factor 0.3 was invented and cannot instantiate the unspecified universal constant hidden by gtrsim.",
+    "contradiction_is_real": true,
+    "displayed_floor": 3.0,
+    "legacy_assertion": "reg_min >= 0",
+    "legacy_assertion_is_vacuous": true,
+    "legacy_source_sha": "12c6b41365d2af3b38e97fcb585139eb2b51347f",
+    "observed_regret": 0.024659483338346222,
+    "valid_assumption_counterexample": false
+  },
+  "zero_delta": {
+    "accepted_as_evidence": false,
+    "description": "Setting Delta=0 makes the testing threshold zero and is explicitly rejected as evidence.",
+    "zero_delta_threshold": 0
+  }
+}

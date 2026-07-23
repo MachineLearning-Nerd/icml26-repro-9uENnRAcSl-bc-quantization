@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "H_Omega_1": true,
+    "H_is_omega_log_on_sweep": true,
+    "all_parameter_conditions": true,
+    "expert_error_O_epsilon": true,
+    "linear_H_fit": true,
+    "normal_tail_error_negligible": true,
+    "preimage_inverse_certified": true,
+    "smooth_control_vanishes": true
+  },
+  "passed": true,
+  "status": "VERIFIED"
+}

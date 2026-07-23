@@ -1,0 +1,772 @@
+{
+  "asymptotic_schedule": "H=ceil(64*|log(epsilon_q)|^2), hence H/|log(epsilon_q)| tends to infinity.",
+  "epsilon_sweep": [
+    {
+      "H_over_abs_log_epsilon": 221.88649728872258,
+      "deployed_regret_lower": 76.21872028293215,
+      "epsilon_q": 0.03125,
+      "expert_error_certificate": {
+        "expectation_upper": 0.2232846084931635,
+        "expectation_upper_over_epsilon": 7.145107471781232,
+        "intervals": {
+          "I_P": [
+            -0.03125,
+            0.03125
+          ],
+          "I_T1": [
+            0.0375,
+            0.06875
+          ],
+          "I_T2": [
+            0.3075,
+            0.31375
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.015625,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 8,
+            "first_probabilities": [
+              0.024929834868754275,
+              0.04987422115777346,
+              0.09986371945133649,
+              0.20061227063521309,
+              0.40697245768400014,
+              0.806315055194037,
+              0.9999922701951653,
+              1.0
+            ],
+            "inverse_residual_max": 2.220446049250313e-16,
+            "normal_tail_truncation_bound": 8.215127015872095e-87,
+            "probability_average": 0.9942634067999822,
+            "probability_sum": 764.5885598291862
+          },
+          "I_T1": {
+            "evaluated_steps": 8,
+            "first_probabilities": [
+              0.012448861034558445,
+              0.024961449694574478,
+              0.050403941882687264,
+              0.10360909169088156,
+              0.18799421971881963,
+              0.041682253786873916,
+              3.3057370845954434e-11,
+              1.7382322286942978e-202
+            ],
+            "inverse_residual_max": 3.552713678800501e-15,
+            "normal_tail_truncation_bound": 1.3227947260363605e-199,
+            "probability_average": 0.0005475940414063103,
+            "probability_sum": 0.4210998178414527
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              0.00237595037341376,
+              0.004895036606627934,
+              0.004745303186159011,
+              2.5451662474376278e-11,
+              2.174707281054804e-203
+            ],
+            "inverse_residual_max": 1.7763568394002505e-15,
+            "normal_tail_truncation_bound": 1.6614763627258703e-200,
+            "probability_average": 1.5625865008650673e-05,
+            "probability_sum": 0.012016290191652367
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.20832316676360163,
+          "I_T1": 0.9625175633083385,
+          "I_T2": 0.2840232527996196
+        }
+      },
+      "expert_one_step_error_upper": 0.2232846084931635,
+      "horizon": 769
+    },
+    {
+      "H_over_abs_log_epsilon": 266.1772350440138,
+      "deployed_regret_lower": 109.91481980903808,
+      "epsilon_q": 0.015625,
+      "expert_error_certificate": {
+        "expectation_upper": 0.11185127482180335,
+        "expectation_upper_over_epsilon": 7.158481588595414,
+        "intervals": {
+          "I_P": [
+            -0.015625,
+            0.015625
+          ],
+          "I_T1": [
+            0.01875,
+            0.034375
+          ],
+          "I_T2": [
+            0.30374999999999996,
+            0.306875
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.0078125,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 9,
+            "first_probabilities": [
+              0.012466438999779339,
+              0.024934702391634256,
+              0.04988396470862971,
+              0.09988327348186027,
+              0.20065187705732446,
+              0.4070542908780874,
+              0.8064452284081705,
+              0.9999923340293508
+            ],
+            "inverse_residual_max": 8.881784197001252e-16,
+            "normal_tail_truncation_bound": 9.922608894710047e-87,
+            "probability_average": 0.9951231365040242,
+            "probability_sum": 1101.6013121099547
+          },
+          "I_T1": {
+            "evaluated_steps": 9,
+            "first_probabilities": [
+              0.006231211112007584,
+              0.012470522462393108,
+              0.025004975663711737,
+              0.050492475460063135,
+              0.10379260490896336,
+              0.18821110036552302,
+              0.041610600685966996,
+              3.2209695868707906e-11
+            ],
+            "inverse_residual_max": 3.552713678800501e-15,
+            "normal_tail_truncation_bound": 1.058002982499716e-199,
+            "probability_average": 0.00038646205121123633,
+            "probability_sum": 0.4278134906908386
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              0.0011899217155223463,
+              0.002453667331227094,
+              0.002532199935747173,
+              5.093255098544824e-11,
+              5.947604355893102e-193
+            ],
+            "inverse_residual_max": 2.220446049250313e-16,
+            "normal_tail_truncation_bound": 6.554260014272953e-190,
+            "probability_average": 5.5788518820498324e-06,
+            "probability_sum": 0.006175789033429164
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.1041653952871435,
+          "I_T1": 0.9812521968022556,
+          "I_T2": 0.38775213854279056
+        }
+      },
+      "expert_one_step_error_upper": 0.11185127482180335,
+      "horizon": 1107
+    },
+    {
+      "H_over_abs_log_epsilon": 310.59163237423826,
+      "deployed_regret_lower": 149.81249073340052,
+      "epsilon_q": 0.0078125,
+      "expert_error_certificate": {
+        "expectation_upper": 0.056052764107948565,
+        "expectation_upper_over_epsilon": 7.174753805817416,
+        "intervals": {
+          "I_P": [
+            -0.0078125,
+            0.0078125
+          ],
+          "I_T1": [
+            0.009375,
+            0.0171875
+          ],
+          "I_T2": [
+            0.301875,
+            0.30343749999999997
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.00390625,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 10,
+            "first_probabilities": [
+              0.006233409721685179,
+              0.0124670476630801,
+              0.024935919985315858,
+              0.049886402024028886,
+              0.09988816485865787,
+              0.20066178450148126,
+              0.4070747612754615,
+              0.8064777848702094
+            ],
+            "inverse_residual_max": 1.1102230246251565e-16,
+            "normal_tail_truncation_bound": 1.2939697347021547e-86,
+            "probability_average": 0.9957582067848844,
+            "probability_sum": 1500.6076176248207
+          },
+          "I_T1": {
+            "evaluated_steps": 10,
+            "first_probabilities": [
+              0.003116453770524552,
+              0.006233924259283985,
+              0.012475955264304173,
+              0.025015892255532246,
+              0.05051468053976982,
+              0.10383863108692631,
+              0.18826540577434997,
+              0.04159268416952099
+            ],
+            "inverse_residual_max": 8.881784197001252e-16,
+            "normal_tail_truncation_bound": 1.2443882927670222e-199,
+            "probability_average": 0.00028603425822973654,
+            "probability_sum": 0.43105362715221296
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              0.0005954416226446879,
+              0.0012282925671023293,
+              0.001306098871362564,
+              5.074897371707176e-11,
+              6.845879609467224e-188
+            ],
+            "inverse_residual_max": 2.220446049250313e-16,
+            "normal_tail_truncation_bound": 1.0283144670748095e-184,
+            "probability_average": 2.076863378804615e-06,
+            "probability_sum": 0.003129833111858555
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.05208317439343445,
+          "I_T1": 0.9906252746437201,
+          "I_T2": 0.43960747290762175
+        }
+      },
+      "expert_one_step_error_upper": 0.056052764107948565,
+      "horizon": 1507
+    },
+    {
+      "H_over_abs_log_epsilon": 354.902980058685,
+      "deployed_regret_lower": 195.81113798911028,
+      "epsilon_q": 0.00390625,
+      "expert_error_certificate": {
+        "expectation_upper": 0.028116174473702547,
+        "expectation_upper_over_epsilon": 7.197740665267852,
+        "intervals": {
+          "I_P": [
+            -0.00390625,
+            0.00390625
+          ],
+          "I_T1": [
+            0.0046875,
+            0.00859375
+          ],
+          "I_T2": [
+            0.30093749999999997,
+            0.30171875
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.001953125,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 11,
+            "first_probabilities": [
+              0.0031167286393833926,
+              0.006233485811564299,
+              0.012467199851194766,
+              0.0249362244283291,
+              0.049887011442174556,
+              0.099889387882312,
+              0.2006642617277039,
+              0.4070798796315396
+            ],
+            "inverse_residual_max": 2.220446049250313e-16,
+            "normal_tail_truncation_bound": 1.6728677466401886e-86,
+            "probability_average": 0.9962453010457887,
+            "probability_sum": 1960.610752458112
+          },
+          "I_T1": {
+            "evaluated_steps": 11,
+            "first_probabilities": [
+              0.0015583329320944528,
+              0.0031167930847931236,
+              0.0062346030924207985,
+              0.0124773145591065,
+              0.02501862360529611,
+              0.05052023630660507,
+              0.10385014690734728,
+              0.18827898745580504
+            ],
+            "inverse_residual_max": 2.220446049250313e-16,
+            "normal_tail_truncation_bound": 1.5677666079508034e-199,
+            "probability_average": 0.00021983904614511908,
+            "probability_sum": 0.43264324281359434
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              0.0002978402667758173,
+              0.000614501405607315,
+              0.0006630500427194236,
+              3.5760649021662847e-11,
+              2.106796102431032e-185
+            ],
+            "inverse_residual_max": 8.881784197001252e-16,
+            "normal_tail_truncation_bound": 4.170753621651853e-182,
+            "probability_average": 8.005039384467505e-07,
+            "probability_sum": 0.001575391750863205
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.02604164679863364,
+          "I_T1": 0.9953125343318228,
+          "I_T2": 0.46553288246545943
+        }
+      },
+      "expert_one_step_error_upper": 0.028116174473702547,
+      "horizon": 1968
+    },
+    {
+      "H_over_abs_log_epsilon": 399.3059274282675,
+      "deployed_regret_lower": 248.01036781541654,
+      "epsilon_q": 0.001953125,
+      "expert_error_certificate": {
+        "expectation_upper": 0.014127292175379629,
+        "expectation_upper_over_epsilon": 7.23317359379437,
+        "intervals": {
+          "I_P": [
+            -0.001953125,
+            0.001953125
+          ],
+          "I_T1": [
+            0.00234375,
+            0.004296875
+          ],
+          "I_T2": [
+            0.30046875,
+            0.300859375
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.0009765625,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 12,
+            "first_probabilities": [
+              0.0015583672920347902,
+              0.003116738150835907,
+              0.006233504834730674,
+              0.012467237899616734,
+              0.024936300541869905,
+              0.04988716380229308,
+              0.09988969364944356,
+              0.20066488105708785
+            ],
+            "inverse_residual_max": 8.881784197001252e-16,
+            "normal_tail_truncation_bound": 2.113193898342622e-86,
+            "probability_average": 0.9966328042397518,
+            "probability_sum": 2482.6123153612216
+          },
+          "I_T1": {
+            "evaluated_steps": 12,
+            "first_probabilities": [
+              0.0007791797225268904,
+              0.0015583753517171006,
+              0.0031168779304417416,
+              0.00623477283488133,
+              0.012477654451265363,
+              0.02501930658047702,
+              0.05052162552963063,
+              0.10385302644272887
+            ],
+            "inverse_residual_max": 3.552713678800501e-15,
+            "normal_tail_truncation_bound": 1.967686282321593e-199,
+            "probability_average": 0.00017399850946510557,
+            "probability_sum": 0.43343028707757797
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              0.0001489499051344212,
+              0.0003073382949200232,
+              0.0003340244661556996,
+              2.121563605211232e-11,
+              3.319279350269586e-184
+            ],
+            "inverse_residual_max": 8.881784197001252e-16,
+            "normal_tail_truncation_bound": 9.101479273202994e-181,
+            "probability_average": 3.172672370235969e-07,
+            "probability_sum": 0.00079031268742578
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.013020830849812152,
+          "I_T1": 0.9976562542915203,
+          "I_T2": 0.4784950253092982
+        }
+      },
+      "expert_one_step_error_upper": 0.014127292175379629,
+      "horizon": 2491
+    },
+    {
+      "H_over_abs_log_epsilon": 443.62872507335624,
+      "deployed_regret_lower": 306.30993590286766,
+      "epsilon_q": 0.0009765625,
+      "expert_error_certificate": {
+        "expectation_upper": 0.007119800945547467,
+        "expectation_upper_over_epsilon": 7.290676168240606,
+        "intervals": {
+          "I_P": [
+            -0.0009765625,
+            0.0009765625
+          ],
+          "I_T1": [
+            0.001171875,
+            0.0021484375
+          ],
+          "I_T2": [
+            0.300234375,
+            0.3004296875
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.00048828125,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 13,
+            "first_probabilities": [
+              0.000779184017561052,
+              0.0015583684809731824,
+              0.003116740528720907,
+              0.0062335095905659,
+              0.012467247411809323,
+              0.024936319570429355,
+              0.049887201892671484,
+              0.09988977009192768
+            ],
+            "inverse_residual_max": 8.881784197001252e-16,
+            "normal_tail_truncation_bound": 2.6083508770208284e-86,
+            "probability_average": 0.9969473481887452,
+            "probability_sum": 3065.6130956803913
+          },
+          "I_T1": {
+            "evaluated_steps": 13,
+            "first_probabilities": [
+              0.0003895915183429466,
+              0.0007791850251465116,
+              0.0015583859571565717,
+              0.0031168991429217363,
+              0.006234815272632976,
+              0.012477739428584711,
+              0.0250194773328829,
+              0.050521972852973385
+            ],
+            "inverse_residual_max": 1.1102230246251565e-16,
+            "normal_tail_truncation_bound": 2.424832147387938e-199,
+            "probability_average": 0.00014108027646322744,
+            "probability_sum": 0.43382185012442437
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              7.448238398011231e-05,
+              0.00015369089769246003,
+              0.00016763695496626457,
+              1.1553272420948986e-11,
+              1.0475758647544727e-183
+            ],
+            "inverse_residual_max": 1.1102230246251565e-16,
+            "normal_tail_truncation_bound": 4.6399847512958035e-180,
+            "probability_average": 1.2871877989987295e-07,
+            "probability_sum": 0.00039581024819210935
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.006510416356225986,
+          "I_T1": 0.9988281255364414,
+          "I_T2": 0.48497595655840997
+        }
+      },
+      "expert_one_step_error_upper": 0.007119800945547467,
+      "horizon": 3075
+    },
+    {
+      "H_over_abs_log_epsilon": 488.0243861043484,
+      "deployed_regret_lower": 370.80969655244326,
+      "epsilon_q": 0.00048828125,
+      "expert_error_certificate": {
+        "expectation_upper": 0.0036068601436887466,
+        "expectation_upper_over_epsilon": 7.386849574274553,
+        "intervals": {
+          "I_P": [
+            -0.00048828125,
+            0.00048828125
+          ],
+          "I_T1": [
+            0.0005859375,
+            0.00107421875
+          ],
+          "I_T2": [
+            0.3001171875,
+            0.30021484375
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.000244140625,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 14,
+            "first_probabilities": [
+              0.0003895920552234866,
+              0.0007791841661786147,
+              0.0015583687782084188,
+              0.003116741123193434,
+              0.006233510779527329,
+              0.012467249789862966,
+              0.02493632432758014,
+              0.04988721141528796
+            ],
+            "inverse_residual_max": 1.6653345369377348e-16,
+            "normal_tail_truncation_bound": 3.1572423029899254e-86,
+            "probability_average": 0.9972086765805922,
+            "probability_sum": 3710.6134855563837
+          },
+          "I_T1": {
+            "evaluated_steps": 14,
+            "first_probabilities": [
+              0.00019479596630705975,
+              0.0003895921811756242,
+              0.0007791863508181396,
+              0.0015583886085497878,
+              0.0031169044461084594,
+              0.0062348258822043645,
+              0.012477760673182015,
+              0.02501952002152258
+            ],
+            "inverse_residual_max": 1.1102230246251565e-16,
+            "normal_tail_truncation_bound": 2.9339206927910153e-199,
+            "probability_average": 0.00011663991928013016,
+            "probability_sum": 0.43401713964136435
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              3.7243048402302303e-05,
+              7.685086797687424e-05,
+              8.397463736294075e-05,
+              6.028349906441163e-12,
+              1.3659866455690978e-183
+            ],
+            "inverse_residual_max": 8.881784197001252e-16,
+            "normal_tail_truncation_bound": 1.1395699681152975e-179,
+            "probability_average": 5.322992737717474e-08,
+            "probability_sum": 0.0001980685597704672
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.0032552082945282316,
+          "I_T1": 0.9994140625670552,
+          "I_T2": 0.48821638717876403
+        }
+      },
+      "expert_one_step_error_upper": 0.0036068601436887466,
+      "horizon": 3721
+    },
+    {
+      "H_over_abs_log_epsilon": 532.3544700880276,
+      "deployed_regret_lower": 441.4095651848238,
+      "epsilon_q": 0.000244140625,
+      "expert_error_certificate": {
+        "expectation_upper": 0.0018435099730943994,
+        "expectation_upper_over_epsilon": 7.55101684979466,
+        "intervals": {
+          "I_P": [
+            -0.000244140625,
+            0.000244140625
+          ],
+          "I_T1": [
+            0.00029296875,
+            0.000537109375
+          ],
+          "I_T2": [
+            0.30005859375,
+            0.300107421875
+          ]
+        },
+        "method": "Invert the monotone raw-expert recursion at every interval endpoint, evaluate exact Gaussian preimage masses, and combine them with interval-wise quantization-error suprema.",
+        "outside_trigger_delta": -0.0001220703125,
+        "probability_certificates": {
+          "I_P": {
+            "evaluated_steps": 15,
+            "first_probabilities": [
+              0.000194796033417155,
+              0.00038959207380068195,
+              0.0007791842033329499,
+              0.0015583688525173112,
+              0.0031167412718116627,
+              0.00623351107676795,
+              0.012467250384376738,
+              0.024936325516868474
+            ],
+            "inverse_residual_max": 1.6653345369377348e-16,
+            "normal_tail_truncation_bound": 3.758377329597416e-86,
+            "probability_average": 0.9974285637812602,
+            "probability_sum": 4416.61368042342
+          },
+          "I_T1": {
+            "evaluated_steps": 15,
+            "first_probabilities": [
+              9.739800904545737e-05,
+              0.00019479604916128324,
+              0.00038959234688429323,
+              0.0007791866822370874,
+              0.001558389271400229,
+              0.0031169057719093174,
+              0.006234828534605608,
+              0.012477765984348077
+            ],
+            "inverse_residual_max": 1.1102230246251565e-16,
+            "normal_tail_truncation_bound": 3.49218332182924e-199,
+            "probability_average": 9.803854135530211e-05,
+            "probability_sum": 0.4341146611212777
+          },
+          "I_T2": {
+            "evaluated_steps": 5,
+            "first_probabilities": [
+              1.8621988124023492e-05,
+              3.842678647059117e-05,
+              4.202635587900738e-05,
+              3.0791161776561498e-12,
+              1.1139859711906913e-183
+            ],
+            "inverse_residual_max": 2.220446049250313e-16,
+            "normal_tail_truncation_bound": 1.9314203332316047e-179,
+            "probability_average": 2.2374691407574123e-08,
+            "probability_sum": 9.907513355273821e-05
+          }
+        },
+        "trigger_error_suprema": {
+          "I_P": 0.0016276041618160284,
+          "I_T1": 0.9997070312583819,
+          "I_T2": 0.4898365937427737
+        }
+      },
+      "expert_one_step_error_upper": 0.0018435099730943994,
+      "horizon": 4428
+    }
+  ],
+  "expert_error_exponent": {
+    "intercept": 1.9228252081997932,
+    "r2": 0.9999789018610517,
+    "residual_sum_squares": 0.00041706587677649965,
+    "slope": 0.989750129965306
+  },
+  "horizon_sweep": {
+    "H": [
+      16,
+      32,
+      64,
+      128,
+      256,
+      512
+    ],
+    "epsilon_q": 0.00390625,
+    "linear_fit": {
+      "intercept": -0.9888620108829262,
+      "r2": 1.0,
+      "residual_sum_squares": 1.9029099970967552e-26,
+      "slope": 0.10000000000000091
+    },
+    "regret_lower": [
+      0.6111379891171398,
+      2.2111379891171405,
+      5.411137989117137,
+      11.811137989117114,
+      24.61113798911722,
+      50.21113798911758
+    ],
+    "regret_per_H": [
+      0.03819612431982124,
+      0.06909806215991064,
+      0.08454903107995526,
+      0.09227451553997745,
+      0.09613725776998915,
+      0.09806862888499528
+    ]
+  },
+  "no_trigger_negative_control": {
+    "description": "Removing the three exceptional pieces removes the floor.",
+    "regret_per_H_upper": [
+      0.015625,
+      0.0078125,
+      0.00390625,
+      0.001953125,
+      0.0009765625,
+      0.00048828125,
+      0.000244140625,
+      0.0001220703125
+    ]
+  },
+  "parameters": {
+    "A": 0.2,
+    "B": 0.3,
+    "conditions": {
+      "A_k_lt_1": true,
+      "d_gt_k_over_2": true,
+      "k_over_2_gt_B_over_1_minus_lambda": true
+    },
+    "d": 1.2,
+    "dynamics": "f(x,u)=A*x+B*u",
+    "expert": "pi*(x)=arctan(x)",
+    "k": 2.0,
+    "lambda": 0.5,
+    "paper_example_audit": "The printed A=.2,B=.3,k=1,d=.6 violates k/2>B/(1-lambda); k=2,d=1.2 satisfies the stated conditions without changing the construction.",
+    "quantizer": "paper piecewise values on I_P, I_T1, I_T2; pi*(x)+signed epsilon_q/2 otherwise",
+    "reward": "1-|u-arctan(x)|"
+  },
+  "smooth_binning_control": {
+    "epsilon_exponent": {
+      "intercept": -0.22314355131421162,
+      "r2": 1.0,
+      "residual_sum_squares": 2.524354896707238e-29,
+      "slope": 1.0
+    },
+    "rows": [
+      {
+        "epsilon_q": 0.03125,
+        "regret_per_h_upper": 0.025
+      },
+      {
+        "epsilon_q": 0.015625,
+        "regret_per_h_upper": 0.0125
+      },
+      {
+        "epsilon_q": 0.0078125,
+        "regret_per_h_upper": 0.00625
+      },
+      {
+        "epsilon_q": 0.00390625,
+        "regret_per_h_upper": 0.003125
+      },
+      {
+        "epsilon_q": 0.001953125,
+        "regret_per_h_upper": 0.0015625
+      },
+      {
+        "epsilon_q": 0.0009765625,
+        "regret_per_h_upper": 0.00078125
+      },
+      {
+        "epsilon_q": 0.00048828125,
+        "regret_per_h_upper": 0.000390625
+      },
+      {
+        "epsilon_q": 0.000244140625,
+        "regret_per_h_upper": 0.0001953125
+      }
+    ]
+  }
+}

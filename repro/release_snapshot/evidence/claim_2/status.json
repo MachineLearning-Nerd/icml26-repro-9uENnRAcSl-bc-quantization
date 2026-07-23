@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "broad_geometric_h_sweep": true,
+    "classification_negative_control": true,
+    "epsilon_varied_independently": true,
+    "rtvc_exhaustive_zero_violations": true,
+    "stable_piiss_exact_certificate": true,
+    "stable_polynomial_growth": true,
+    "unstable_exponential_growth": true,
+    "unstable_violates_piiss": true
+  },
+  "passed": true,
+  "status": "VERIFIED"
+}

@@ -896,7 +896,46 @@ def run_claims_3_4_6() -> dict[str, dict[str, Any]]:
             summary["expert_error_exponent"] = claim3[
                 "expert_error_exponent"
             ]["slope"]
-            summary["expert_error_rows"] = claim3["epsilon_sweep"]
+            summary["max_expert_error_over_epsilon"] = max(
+                row["expert_one_step_error_upper"] / row["epsilon_q"]
+                for row in claim3["epsilon_sweep"]
+            )
+            summary["deployed_regret_per_H_floor"] = min(
+                claim3["horizon_sweep"]["regret_per_H"][-3:]
+            )
+        if claim == 4:
+            direct = claim4["direct_augmented_rollouts"]
+            summary["augmented_epsilon_exponent"] = direct[
+                "augmented_epsilon_exponent"
+            ]["slope"]
+            summary["feedback_regret_per_H_floor"] = direct[
+                "feedback_floor"
+            ]
+            summary["max_quadrature_refinement_difference"] = max(
+                row["last_refinement_difference"]
+                for row in direct["factorial_rows"]
+            )
+            summary["finite_n_exponent"] = claim4["finite_logloss_mle"][
+                "n_exponent_at_largest_classes"
+            ]["slope"]
+            summary["max_observed_to_theorem_scale_ratio"] = max(
+                row["observed_to_theorem_scale_ratio"]
+                for row in claim4["complete_product_construction_sweep"]
+            )
+        if claim == 6:
+            summary["exhaustive_pair_count"] = sum(
+                row["pair_count"] for row in claim6["binning_pairs"]
+            )
+            summary["broken_width_violation_count"] = claim6[
+                "broken_bin_width_total_violations"
+            ]
+            summary["minimum_learned_jump"] = min(
+                row["jump"] for row in claim6["learned_piecewise_pairs"]
+            )
+            summary["max_stochastic_tail_refinement_difference"] = max(
+                row["tail_refinement_difference"]
+                for row in claim6["stochastic_actual_tv_criterion"]
+            )
         write_json(target / "summary.json", summary)
         manifest = {}
         for artifact in sorted(target.iterdir()):

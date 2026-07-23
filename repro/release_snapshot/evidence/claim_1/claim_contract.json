@@ -1,0 +1,16 @@
+{
+  "claim": 1,
+  "paper_anchor": "https://ar5iv.labs.arxiv.org/html/2603.20538#Thmtheorem2",
+  "paper_sha256": "a1517e403f96e5c0c3529bbf8fcf3d8fad29b3149f164added02036f3318f0e1",
+  "status_vocabulary": ["VERIFIED", "FALSIFIED", "BLOCKED"],
+  "required_checks": {
+    "genuine_log_loss": "Bernoulli negative-log-likelihood MLE must minimize the sample objective.",
+    "n_rate": "Six-point geometric n sweep spanning at least three orders and 256 deterministic seeds.",
+    "slope": "95% bootstrap CI contains -0.5 and excludes 0 and -1.",
+    "quantization_floor": "Independent epsilon_q sweep has exponent in [0.99,1.01] and lies below H^2 epsilon_q.",
+    "finite_policy_class": "Actual finite log-loss classes are swept and squared uniform deviation grows linearly with log|Pi| with R^2 >= 0.90.",
+    "negative_controls": "A fixed-sample zero-effect control has slope near 0; an injected wrong-rate control has slope near -1; a one-policy class control removes log|Pi| growth.",
+    "independent_checker": "A second implementation recomputes all decisive fits from raw arrays."
+  },
+  "decision": "VERIFIED only if every required check and the independent checker pass; otherwise BLOCKED."
+}

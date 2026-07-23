@@ -1,0 +1,14 @@
+{
+  "claim": 5,
+  "git_sha": "ca81069980d0373357ee1bdc675c059c4a56872c",
+  "legacy_floor": 3.0,
+  "legacy_observed": 0.024659483338346222,
+  "passed": true,
+  "runtime_seconds": 0.48740083299344406,
+  "status": "VERIFIED",
+  "theorem_8_min_H_over_n_constant": 0.05928591245852828,
+  "theorem_8_status": "VERIFIED",
+  "theorem_9_max_exact_tv": 0.3108283788214742,
+  "theorem_9_min_event_probability": 0.17229290529463145,
+  "theorem_9_status": "VERIFIED"
+}

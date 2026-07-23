@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "finite_policy_log_term_fit": true,
+    "finite_policy_log_term_positive": true,
+    "finite_policy_negative_control_flat": true,
+    "genuine_log_loss_mle": true,
+    "n_sweep_six_points_three_orders": true,
+    "quantization_floor_below_theorem_scale": true,
+    "quantization_floor_linear": true,
+    "rate_ci_contains_minus_half": true,
+    "rate_ci_excludes_minus_one": true,
+    "rate_ci_excludes_zero": true,
+    "rate_point_near_minus_half": true,
+    "wrong_rate_control_rejected": true,
+    "zero_effect_control_rejected": true
+  },
+  "passed": true,
+  "status": "VERIFIED"
+}

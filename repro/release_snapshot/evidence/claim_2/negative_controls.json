@@ -1,0 +1,126 @@
+{
+  "unstable_dynamics": {
+    "alpha": {
+      "decimal": 2.0,
+      "denominator": 1,
+      "numerator": 2
+    },
+    "cumulative_state_difference": [
+      {
+        "decimal": 0.025390625,
+        "denominator": 512,
+        "numerator": 13
+      },
+      {
+        "decimal": 0.490234375,
+        "denominator": 512,
+        "numerator": 251
+      },
+      {
+        "decimal": 127.982421875,
+        "denominator": 512,
+        "numerator": 65527
+      },
+      {
+        "decimal": 8388607.966796875,
+        "denominator": 512,
+        "numerator": 4294967279
+      },
+      {
+        "decimal": 3.602879701896397e+16,
+        "denominator": 512,
+        "numerator": 18446744073709551583
+      },
+      {
+        "decimal": 6.64613997892458e+35,
+        "denominator": 512,
+        "numerator": 340282366920938463463374607431768211391
+      }
+    ],
+    "final_state_difference": [
+      {
+        "decimal": 0.0146484375,
+        "denominator": 1024,
+        "numerator": 15
+      },
+      {
+        "decimal": 0.2490234375,
+        "denominator": 1024,
+        "numerator": 255
+      },
+      {
+        "decimal": 63.9990234375,
+        "denominator": 1024,
+        "numerator": 65535
+      },
+      {
+        "decimal": 4194303.9990234375,
+        "denominator": 1024,
+        "numerator": 4294967295
+      },
+      {
+        "decimal": 1.8014398509481984e+16,
+        "denominator": 1024,
+        "numerator": 18446744073709551615
+      },
+      {
+        "decimal": 3.32306998946229e+35,
+        "denominator": 1024,
+        "numerator": 340282366920938463463374607431768211455
+      }
+    ],
+    "fits": {
+      "exponential_semilog": {
+        "intercept": -6.308198582931312,
+        "r2": 0.9999947673328663,
+        "residual_sum_squares": 0.02836046415238652,
+        "slope": 0.6939080636342891
+      },
+      "polynomial_loglog": {
+        "intercept": -48.956782304610364,
+        "r2": 0.821833121054555,
+        "residual_sum_squares": 965.6443367035425,
+        "slope": 23.01666768226718
+      }
+    }
+  },
+  "unstable_piiss": {
+    "alpha": "2",
+    "analytic_gain": "2^H-1 for a constant perturbation",
+    "gains": [
+      {
+        "gain": {
+          "decimal": 15.0,
+          "denominator": 1,
+          "numerator": 15
+        },
+        "horizon": 4
+      },
+      {
+        "gain": {
+          "decimal": 255.0,
+          "denominator": 1,
+          "numerator": 255
+        },
+        "horizon": 8
+      },
+      {
+        "gain": {
+          "decimal": 65535.0,
+          "denominator": 1,
+          "numerator": 65535
+        },
+        "horizon": 16
+      },
+      {
+        "gain": {
+          "decimal": 4294967295.0,
+          "denominator": 1,
+          "numerator": 4294967295
+        },
+        "horizon": 32
+      }
+    ],
+    "violation": "No horizon-independent max-modulus gamma can bound gains that diverge as 2^H-1."
+  }
+}

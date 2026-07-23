@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "all_epsilon_resolution_cells": true,
+    "binning_quantizer_assumption_valid": true,
+    "binning_zero_violations": true,
+    "broken_width_control": true,
+    "learned_deterministic_tv_one": true,
+    "learned_persistent_jump": true,
+    "learned_relaxed_OT_cost_one": true,
+    "source_falsification": true,
+    "stochastic_actual_TV_data_processing": true
+  },
+  "claim": 6,
+  "passed": true,
+  "status": "FALSIFIED"
+}

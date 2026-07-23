@@ -1,5 +1,9 @@
 # Conclusion
 
+> **Superseded conclusion.** The live judge contradicted the “6/6” statement
+> below. It is preserved as historical evidence and must not be read as the
+> current result. See [the final claim ledger](#/final-ledger). The exact
+> original is retained at [Legacy audit / Conclusion](#/legacy-conclusion).
 
 ---
 <!-- trackio-cell

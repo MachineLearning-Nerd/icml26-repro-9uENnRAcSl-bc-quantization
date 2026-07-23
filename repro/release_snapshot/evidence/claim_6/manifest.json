@@ -1,0 +1,30 @@
+{
+  "claim_contract.json": {
+    "bytes": 468,
+    "sha256": "634853a19bbb27edaa7ff3c09ecb60d301def5265437c8f6353f6c54fe39497d"
+  },
+  "method.md": {
+    "bytes": 947,
+    "sha256": "c0b5dc8a8c79db038c46a80825660de96d9af27cbb64cfdc355245cf23bae702"
+  },
+  "provenance.json": {
+    "bytes": 382,
+    "sha256": "d205bb1b8a54ce36fbe1a02b6f740de7850889713946ce82c5e021c61afeb837"
+  },
+  "raw_results.json": {
+    "bytes": 23532,
+    "sha256": "93327837d8d2d1874d4dd8012449ff6e50b507dfa80c15a5f8ac3b3538bf2c80"
+  },
+  "source_audit.md": {
+    "bytes": 318,
+    "sha256": "d7fff5632c349ec0b7285d7633ac6c7342358044688d6e34af6216922c21b932"
+  },
+  "status.json": {
+    "bytes": 429,
+    "sha256": "7212ab5f8bedf03df429745ccbf8932f75cbfa0c37164948ddf4388b5d9ad50f"
+  },
+  "summary.json": {
+    "bytes": 443,
+    "sha256": "54c4e07841a95b08b0e782652145b9b59f4c24e76bdc6566cef7294b67f765e9"
+  }
+}

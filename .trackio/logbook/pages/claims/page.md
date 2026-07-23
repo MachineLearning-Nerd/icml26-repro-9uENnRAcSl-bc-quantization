@@ -1,5 +1,10 @@
 # Claims
 
+> **Superseded assessment.** This claim list is preserved for traceability.
+> Claim 6's word “Empirically” is not supported by this paper; the rigorous
+> source audit therefore marks that literal wording FALSIFIED. See
+> [the final ledger](#/final-ledger). The exact original is retained at
+> [Legacy audit / Claims](#/legacy-claims).
 
 ---
 <!-- trackio-cell

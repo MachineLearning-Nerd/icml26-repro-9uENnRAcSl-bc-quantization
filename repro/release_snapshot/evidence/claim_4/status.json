@@ -1,0 +1,17 @@
+{
+  "checks": {
+    "all_direct_rollouts_below_stability_certificate": true,
+    "broken_model_control": true,
+    "claim3_prerequisite_verified": true,
+    "class_and_model_log_term": true,
+    "direct_augmented_epsilon_rate": true,
+    "direct_feedback_retains_floor": true,
+    "factorial_points_are_operational": true,
+    "finite_n_minus_half": true,
+    "full_factorial_formula_sweep": true,
+    "quadrature_converged": true,
+    "same_RTVC_violating_construction": true
+  },
+  "passed": true,
+  "status": "VERIFIED"
+}

@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "broken_bin_width_breaks_collision": true,
+    "legacy_contradiction_resolved": true,
+    "theorem_8_bin_collisions": true,
+    "theorem_8_exact_hellinger_identity": true,
+    "theorem_8_nonvacuous_H_over_n": true,
+    "theorem_9_additive_quantization": true,
+    "theorem_9_displayed_constant_gap_recorded": true,
+    "theorem_9_exact_binomial_enumeration": true,
+    "theorem_9_probability_at_least_one_eighth": true,
+    "theorem_9_sqrt_n_scaling": true,
+    "zero_delta_control_rejected": true
+  },
+  "passed": true,
+  "status": "VERIFIED",
+  "subclaims": {
+    "theorem_8": "VERIFIED",
+    "theorem_9": "VERIFIED"
+  }
+}

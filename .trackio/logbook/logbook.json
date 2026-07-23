@@ -1,51 +1,155 @@
 {
   "schema_version": 1,
-  "title": "Repro - Understanding Behavior Cloning with Action Quantization",
-  "emoji": "🎯",
-  "space_id": null,
-  "paper": null,
+  "title": "Rigorous audit - Understanding Behavior Cloning with Action Quantization",
+  "emoji": "🔬",
+  "space_id": "DineshAI/9uENnRAcSl",
+  "paper": "arxiv:2603.20538",
   "tags": [
     "icml2026-repro",
-    "paper-9uENnRAcSl"
+    "paper-9uENnRAcSl",
+    "rigorous-audit"
   ],
-  "updated_at": "2026-07-21T19:54:42+00:00",
+  "updated_at": "2026-07-23T00:00:00+00:00",
   "root": {
     "slug": "index",
-    "title": "Repro - Understanding Behavior Cloning with Action Quantization",
+    "title": "Rigorous audit",
     "file": "pages/index.md",
     "children": [
       {
+        "slug": "methodology",
+        "title": "Methodology",
+        "file": "pages/methodology/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-1",
+        "title": "Claim 1 - Theorem 2",
+        "file": "pages/claim-1/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-2",
+        "title": "Claim 2 - Theorem 3",
+        "file": "pages/claim-2/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-3",
+        "title": "Claim 3 - Theorem 6",
+        "file": "pages/claim-3/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-4",
+        "title": "Claim 4 - Theorem 7",
+        "file": "pages/claim-4/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-5",
+        "title": "Claim 5 - Theorems 8 and 9",
+        "file": "pages/claim-5/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-6",
+        "title": "Claim 6 - RTVC source audit",
+        "file": "pages/claim-6/page.md",
+        "children": []
+      },
+      {
+        "slug": "provenance",
+        "title": "Provenance and artifacts",
+        "file": "pages/provenance/page.md",
+        "children": []
+      },
+      {
+        "slug": "limitations",
+        "title": "Limitations",
+        "file": "pages/limitations/page.md",
+        "children": []
+      },
+      {
+        "slug": "final-ledger",
+        "title": "Final claim ledger",
+        "file": "pages/final-ledger/page.md",
+        "children": []
+      },
+      {
+        "slug": "legacy",
+        "title": "Legacy audit (superseded)",
+        "file": "pages/legacy/page.md",
+        "children": [
+          {
+            "slug": "legacy-index",
+            "title": "Legacy root",
+            "file": "pages/legacy/index.md",
+            "children": []
+          },
+          {
+            "slug": "legacy-overview",
+            "title": "Legacy overview",
+            "file": "pages/legacy/overview/page.md",
+            "children": []
+          },
+          {
+            "slug": "legacy-claims",
+            "title": "Legacy claims",
+            "file": "pages/legacy/claims/page.md",
+            "children": []
+          },
+          {
+            "slug": "legacy-evidence",
+            "title": "Legacy evidence",
+            "file": "pages/legacy/evidence/page.md",
+            "children": []
+          },
+          {
+            "slug": "legacy-verification-run",
+            "title": "Legacy verification run",
+            "file": "pages/legacy/verification-run/page.md",
+            "children": []
+          },
+          {
+            "slug": "legacy-conclusion",
+            "title": "Legacy conclusion",
+            "file": "pages/legacy/conclusion/page.md",
+            "children": []
+          }
+        ]
+      },
+      {
         "slug": "overview",
-        "title": "Overview",
+        "title": "Original overview (bannered)",
         "file": "pages/overview/page.md",
         "children": []
       },
       {
         "slug": "claims",
-        "title": "Claims",
+        "title": "Original claims (bannered)",
         "file": "pages/claims/page.md",
         "children": []
       },
       {
         "slug": "evidence",
-        "title": "Evidence",
+        "title": "Original evidence (bannered)",
         "file": "pages/evidence/page.md",
         "children": []
       },
       {
         "slug": "verification-run",
-        "title": "Verification run",
+        "title": "Original verification run (bannered)",
         "file": "pages/verification-run/page.md",
         "children": []
       },
       {
         "slug": "conclusion",
-        "title": "Conclusion",
+        "title": "Original conclusion (bannered)",
         "file": "pages/conclusion/page.md",
         "children": []
       }
     ]
   },
-  "agent_view_tokens": 1580,
-  "revision": "1784663682232612804"
+  "agent_view_tokens": 8000,
+  "revision": "rigorous-release-candidate"
 }

@@ -15,8 +15,13 @@ from repro.rigorous.claim5 import run_claim_5
 from repro.rigorous.common import ARTIFACT_ROOT, canonical_json, write_json
 from repro.rigorous.independent_check_1 import check_claim_1
 from repro.rigorous.independent_check_2 import check_claim_2
-from repro.rigorous.independent_check_346 import check_claims_3_4_6
+from repro.rigorous.independent_check_346 import (
+    check_claim_3,
+    check_claim_4,
+    check_claim_6,
+)
 from repro.rigorous.independent_check_5 import check_claim_5
+from repro.release.validate_release import validate_release
 
 
 def main() -> int:
@@ -31,9 +36,12 @@ def main() -> int:
         "2": check_claim_2(),
         "5": check_claim_5(),
     }
-    final_independent = check_claims_3_4_6()
     independent.update(
-        {claim: final_independent for claim in ["3", "4", "6"]}
+        {
+            "3": check_claim_3(),
+            "4": check_claim_4(),
+            "6": check_claim_6(),
+        }
     )
     ledger = {
         "paper": "Understanding Behavior Cloning with Action Quantization",
@@ -103,6 +111,11 @@ def main() -> int:
             )
         )
     print("CUMULATIVE_LEDGER=" + json.dumps(ledger, sort_keys=True))
+    release_validation = validate_release(ledger)
+    print(
+        "RELEASE_VALIDATION="
+        + json.dumps(release_validation, sort_keys=True)
+    )
     print(
         canonical_json(
             {
@@ -117,7 +130,7 @@ def main() -> int:
         summaries[claim]["passed"] and independent[claim]["passed"]
         for claim in ["1", "2", "3", "4", "5", "6"]
     )
-    return 0 if implemented_passed else 1
+    return 0 if implemented_passed and release_validation["passed"] else 1
 
 
 if __name__ == "__main__":

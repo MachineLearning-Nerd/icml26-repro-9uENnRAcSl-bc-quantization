@@ -1,5 +1,9 @@
 # Verification run
 
+> **Superseded run.** This original run remains available for provenance but
+> does not satisfy the rigorous acceptance contracts. See
+> [Provenance and artifacts](#/provenance). The exact original is retained at
+> [Legacy audit / Verification run](#/legacy-verification-run).
 
 ---
 <!-- trackio-cell

@@ -1,0 +1,13 @@
+{
+  "command": "uv run --frozen python repro/src/verify_bc.py",
+  "cpu_count": 8,
+  "git_sha": "ca81069980d0373357ee1bdc675c059c4a56872c",
+  "hardware_policy": "CPU only; GPU use prohibited",
+  "machine": "arm64",
+  "numpy": "2.5.1",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "processor": "arm",
+  "python": "3.12.11",
+  "runtime_seconds": 0.1166487910086289,
+  "seeds": []
+}

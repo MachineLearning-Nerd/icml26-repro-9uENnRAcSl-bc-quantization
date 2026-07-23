@@ -1,5 +1,9 @@
 # Overview
 
+> **Superseded assessment.** This page is preserved from the judged revision.
+> Its “all claims verified” statement was rejected by the live 3/12 verdict.
+> See [the rigorous audit](#/index). The exact original is retained at
+> [Legacy audit / Overview](#/legacy-overview).
 
 ---
 <!-- trackio-cell

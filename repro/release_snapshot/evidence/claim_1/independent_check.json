@@ -1,0 +1,52 @@
+{
+  "bootstrap": {
+    "ci95": [
+      -0.5148759591864107,
+      -0.48252695166064585
+    ],
+    "median": -0.4994455634082212,
+    "replicates": 2000,
+    "seed": 91020538
+  },
+  "checker": "independent recomputation from raw arrays",
+  "checks": {
+    "all_errors_finite_nonnegative": true,
+    "finite_class_control_flat": true,
+    "finite_class_log_dependence": true,
+    "floor_exponent": true,
+    "floor_identity": true,
+    "independent_ci_contains_minus_half": true,
+    "independent_ci_excludes_minus_one": true,
+    "independent_ci_excludes_zero": true,
+    "independent_rate_point": true,
+    "raw_shape": true,
+    "wrong_rate_control": true,
+    "zero_effect_control": true
+  },
+  "claim": 1,
+  "finite_class_fit": {
+    "intercept": -2.3246268508957873e-06,
+    "r2": 0.9985633024304974,
+    "residual_sum_squares": 1.829242381315804e-12,
+    "slope": 6.641094551038462e-06
+  },
+  "finite_class_negative_control_fit": {
+    "intercept": 6.4732645353015445e-34,
+    "r2": 1.0,
+    "residual_sum_squares": 1.7556286330095744e-97,
+    "slope": -4.385449013145876e-50
+  },
+  "floor_fit": {
+    "intercept": 2.7725887222397807,
+    "r2": 1.0,
+    "residual_sum_squares": 2.8029214038634076e-29,
+    "slope": 1.0000000000000004
+  },
+  "passed": true,
+  "rate_fit": {
+    "intercept": -0.9600536115567713,
+    "r2": 0.998990687528951,
+    "residual_sum_squares": 0.008467401653033859,
+    "slope": -0.4991930148622723
+  }
+}

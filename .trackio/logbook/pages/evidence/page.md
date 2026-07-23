@@ -1,5 +1,9 @@
 # Evidence
 
+> **Superseded evidence.** The live judge found these checks inconclusive or
+> toy, and the Claim 5 predicate was vacuous. This output is retained as a
+> negative baseline, not accepted evidence. See [Methodology](#/methodology).
+> The exact original is retained at [Legacy audit / Evidence](#/legacy-evidence).
 
 ---
 <!-- trackio-cell

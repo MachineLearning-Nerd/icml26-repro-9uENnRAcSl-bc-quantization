@@ -1,0 +1,391 @@
+{
+  "claim": 2,
+  "epsilon_sweep": {
+    "cumulative_state_difference": [
+      {
+        "decimal": 0.484375000003638,
+        "denominator": 274877906944,
+        "numerator": 133143986177
+      },
+      {
+        "decimal": 0.242187500001819,
+        "denominator": 549755813888,
+        "numerator": 133143986177
+      },
+      {
+        "decimal": 0.1210937500009095,
+        "denominator": 1099511627776,
+        "numerator": 133143986177
+      },
+      {
+        "decimal": 0.06054687500045475,
+        "denominator": 2199023255552,
+        "numerator": 133143986177
+      },
+      {
+        "decimal": 0.030273437500227374,
+        "denominator": 4398046511104,
+        "numerator": 133143986177
+      },
+      {
+        "decimal": 0.015136718750113687,
+        "denominator": 8796093022208,
+        "numerator": 133143986177
+      },
+      {
+        "decimal": 0.007568359375056843,
+        "denominator": 17592186044416,
+        "numerator": 133143986177
+      }
+    ],
+    "epsilon_q": [
+      {
+        "decimal": 0.015625,
+        "denominator": 64,
+        "numerator": 1
+      },
+      {
+        "decimal": 0.0078125,
+        "denominator": 128,
+        "numerator": 1
+      },
+      {
+        "decimal": 0.00390625,
+        "denominator": 256,
+        "numerator": 1
+      },
+      {
+        "decimal": 0.001953125,
+        "denominator": 512,
+        "numerator": 1
+      },
+      {
+        "decimal": 0.0009765625,
+        "denominator": 1024,
+        "numerator": 1
+      },
+      {
+        "decimal": 0.00048828125,
+        "denominator": 2048,
+        "numerator": 1
+      },
+      {
+        "decimal": 0.000244140625,
+        "denominator": 4096,
+        "numerator": 1
+      }
+    ],
+    "fit": {
+      "intercept": 3.4339872044926523,
+      "r2": 1.0,
+      "residual_sum_squares": 2.3875368334579685e-29,
+      "slope": 0.9999999999999996
+    },
+    "horizon": 32
+  },
+  "horizon_sweep": {
+    "construction": {
+      "action_perturbation": "epsilon_q/2",
+      "bounded_reward_note": "The propagation observable diagnoses P-IISS. Any [0,1]-bounded 1-Lipschitz reward regret is additionally capped by H.",
+      "dequantized_action": "bin midpoint",
+      "dynamics": "x_(h+1) = alpha*x_h + u_h with shared initial state",
+      "observable": "sum_h |x_h(raw expert)-x_h(dequantized quantized expert)|",
+      "raw_expert_action": "left endpoint of a width-epsilon_q bin"
+    },
+    "epsilon_q": {
+      "decimal": 0.001953125,
+      "denominator": 512,
+      "numerator": 1
+    },
+    "horizons": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "perturbation": {
+      "decimal": 0.0009765625,
+      "denominator": 1024,
+      "numerator": 1
+    },
+    "stable": {
+      "alpha": {
+        "decimal": 0.5,
+        "denominator": 2,
+        "numerator": 1
+      },
+      "cumulative_state_difference": [
+        {
+          "decimal": 0.0059814453125,
+          "denominator": 8192,
+          "numerator": 49
+        },
+        {
+          "decimal": 0.01367950439453125,
+          "denominator": 131072,
+          "numerator": 1793
+        },
+        {
+          "decimal": 0.029296904802322388,
+          "denominator": 33554432,
+          "numerator": 983041
+        },
+        {
+          "decimal": 0.06054687500045475,
+          "denominator": 2199023255552,
+          "numerator": 133143986177
+        },
+        {
+          "decimal": 0.123046875,
+          "denominator": 9444732965739290427392,
+          "numerator": 1162144876643701751809
+        },
+        {
+          "decimal": 0.248046875,
+          "denominator": 174224571863520493293247799005065324265472,
+          "numerator": 43215860598959184859848575143834562854913
+        }
+      ],
+      "final_state_difference": [
+        {
+          "decimal": 0.0018310546875,
+          "denominator": 8192,
+          "numerator": 15
+        },
+        {
+          "decimal": 0.00194549560546875,
+          "denominator": 131072,
+          "numerator": 255
+        },
+        {
+          "decimal": 0.0019530951976776123,
+          "denominator": 33554432,
+          "numerator": 65535
+        },
+        {
+          "decimal": 0.0019531249995452526,
+          "denominator": 2199023255552,
+          "numerator": 4294967295
+        },
+        {
+          "decimal": 0.001953125,
+          "denominator": 9444732965739290427392,
+          "numerator": 18446744073709551615
+        },
+        {
+          "decimal": 0.001953125,
+          "denominator": 174224571863520493293247799005065324265472,
+          "numerator": 340282366920938463463374607431768211455
+        }
+      ],
+      "fits": {
+        "exponential_semilog": {
+          "intercept": -4.303908445697133,
+          "r2": 0.7996283607902988,
+          "residual_sum_squares": 1.9280240188860014,
+          "slope": 0.026145090335870022
+        },
+        "polynomial_loglog": {
+          "intercept": -6.54104926127452,
+          "r2": 0.9990554882231527,
+          "residual_sum_squares": 0.009088319080807684,
+          "slope": 1.069272540353831
+        }
+      }
+    },
+    "unstable_negative_control": {
+      "alpha": {
+        "decimal": 2.0,
+        "denominator": 1,
+        "numerator": 2
+      },
+      "cumulative_state_difference": [
+        {
+          "decimal": 0.025390625,
+          "denominator": 512,
+          "numerator": 13
+        },
+        {
+          "decimal": 0.490234375,
+          "denominator": 512,
+          "numerator": 251
+        },
+        {
+          "decimal": 127.982421875,
+          "denominator": 512,
+          "numerator": 65527
+        },
+        {
+          "decimal": 8388607.966796875,
+          "denominator": 512,
+          "numerator": 4294967279
+        },
+        {
+          "decimal": 3.602879701896397e+16,
+          "denominator": 512,
+          "numerator": 18446744073709551583
+        },
+        {
+          "decimal": 6.64613997892458e+35,
+          "denominator": 512,
+          "numerator": 340282366920938463463374607431768211391
+        }
+      ],
+      "final_state_difference": [
+        {
+          "decimal": 0.0146484375,
+          "denominator": 1024,
+          "numerator": 15
+        },
+        {
+          "decimal": 0.2490234375,
+          "denominator": 1024,
+          "numerator": 255
+        },
+        {
+          "decimal": 63.9990234375,
+          "denominator": 1024,
+          "numerator": 65535
+        },
+        {
+          "decimal": 4194303.9990234375,
+          "denominator": 1024,
+          "numerator": 4294967295
+        },
+        {
+          "decimal": 1.8014398509481984e+16,
+          "denominator": 1024,
+          "numerator": 18446744073709551615
+        },
+        {
+          "decimal": 3.32306998946229e+35,
+          "denominator": 1024,
+          "numerator": 340282366920938463463374607431768211455
+        }
+      ],
+      "fits": {
+        "exponential_semilog": {
+          "intercept": -6.308198582931312,
+          "r2": 0.9999947673328663,
+          "residual_sum_squares": 0.02836046415238652,
+          "slope": 0.6939080636342891
+        },
+        "polynomial_loglog": {
+          "intercept": -48.956782304610364,
+          "r2": 0.821833121054555,
+          "residual_sum_squares": 965.6443367035425,
+          "slope": 23.01666768226718
+        }
+      }
+    }
+  },
+  "paper_sha256": "a1517e403f96e5c0c3529bbf8fcf3d8fad29b3149f164added02036f3318f0e1",
+  "piiss_certificate": {
+    "stable": {
+      "alpha": "1/2",
+      "analytic_certificate": "sup_h |delta x_h| <= sum_{j>=0}(1/2)^j max_t|delta u_t| = 2 max_t|delta u_t|",
+      "bound_gain": {
+        "decimal": 2.0,
+        "denominator": 1,
+        "numerator": 2
+      },
+      "gamma": "gamma(r_1,...,r_h)=2*max_t r_t",
+      "maximum_enumerated_gain": {
+        "decimal": 1.99951171875,
+        "denominator": 2048,
+        "numerator": 4095
+      },
+      "sequence_horizon": 12,
+      "sequences_exhaustively_enumerated": 4096
+    },
+    "unstable_negative_control": {
+      "alpha": "2",
+      "analytic_gain": "2^H-1 for a constant perturbation",
+      "gains": [
+        {
+          "gain": {
+            "decimal": 15.0,
+            "denominator": 1,
+            "numerator": 15
+          },
+          "horizon": 4
+        },
+        {
+          "gain": {
+            "decimal": 255.0,
+            "denominator": 1,
+            "numerator": 255
+          },
+          "horizon": 8
+        },
+        {
+          "gain": {
+            "decimal": 65535.0,
+            "denominator": 1,
+            "numerator": 65535
+          },
+          "horizon": 16
+        },
+        {
+          "gain": {
+            "decimal": 4294967295.0,
+            "denominator": 1,
+            "numerator": 4294967295
+          },
+          "horizon": 32
+        }
+      ],
+      "violation": "No horizon-independent max-modulus gamma can bound gains that diverge as 2^H-1."
+    }
+  },
+  "rtvc_certificate": {
+    "coupling": "identical deterministic label at both states",
+    "expert_member": "the constant expert bin label is included",
+    "grid_results": [
+      {
+        "grid_resolution": 17,
+        "state_pair_count": 136,
+        "tv_distance": 0,
+        "violations": 0
+      },
+      {
+        "grid_resolution": 33,
+        "state_pair_count": 528,
+        "tv_distance": 0,
+        "violations": 0
+      },
+      {
+        "grid_resolution": 65,
+        "state_pair_count": 2080,
+        "tv_distance": 0,
+        "violations": 0
+      },
+      {
+        "grid_resolution": 129,
+        "state_pair_count": 8256,
+        "tv_distance": 0,
+        "violations": 0
+      }
+    ],
+    "modulus_kappa": "0",
+    "policy_class": "finite class of deterministic state-independent policies on bin labels",
+    "realizable": true,
+    "rtvc_radius": "k*epsilon_q for every k>0",
+    "total_state_pairs": 11000,
+    "total_violations": 0
+  },
+  "scope": {
+    "directly_tested": [
+      "P-IISS max-modulus amplification",
+      "RTVC for the realized deterministic quantized policy class",
+      "polynomial versus exponential horizon propagation",
+      "independent linear epsilon_q scaling"
+    ],
+    "proof_audited": [
+      "The MLE H*log(|Pi|/delta)/n term",
+      "the universal high-probability quantifier"
+    ]
+  }
+}

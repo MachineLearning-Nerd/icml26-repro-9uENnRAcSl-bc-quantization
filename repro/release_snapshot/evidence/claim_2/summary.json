@@ -1,0 +1,14 @@
+{
+  "claim": 2,
+  "epsilon_exponent": 0.9999999999999996,
+  "git_sha": "ca81069980d0373357ee1bdc675c059c4a56872c",
+  "passed": true,
+  "rtvc_pairs": 11000,
+  "rtvc_violations": 0,
+  "runtime_seconds": 0.1166487910086289,
+  "stable_polynomial_r2": 0.9990554882231527,
+  "stable_polynomial_slope": 1.069272540353831,
+  "status": "VERIFIED",
+  "unstable_exponential_r2": 0.9999947673328663,
+  "unstable_exponential_slope": 0.6939080636342891
+}
