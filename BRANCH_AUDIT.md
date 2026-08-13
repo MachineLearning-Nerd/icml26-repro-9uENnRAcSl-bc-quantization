@@ -38,3 +38,16 @@ After publication, verify and record:
 - reachable commit author and committer identities;
 - published README, gate, publication JSON, and branch audit;
 - local `main` tracking `origin/main` with a clean worktree.
+
+## Live verification
+
+Verified on 2026-08-14 after the repository rename and history normalization:
+
+- Repository: `MachineLearning-Nerd/icml26-behavior-cloning-action-quantization`.
+- Homepage: `https://arxiv.org/abs/2603.20538v1`.
+- Default branch: `main`.
+- GitHub exposes exactly the ten final branches listed above.
+- No `master` branch or `orx/*` branch remains on the remote.
+- All reachable local and published branch history uses the required
+  `MachineLearning-Nerd@users.noreply.github.com` author and committer identity.
+- The local `main` branch tracks `origin/main` and the worktree is clean.
