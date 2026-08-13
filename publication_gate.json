@@ -1,8 +1,36 @@
 {
-  "paper": "9uENnRAcSl",
-  "tests_passed": true,
-  "publication_gate_passed": true,
-  "claims_verified": 6,
-  "claims_total": 6,
-  "arxiv": "2603.20538"
+  "schema_version": 2,
+  "repository": "MachineLearning-Nerd/icml26-behavior-cloning-action-quantization",
+  "legacy_repository": "MachineLearning-Nerd/icml26-repro-9uENnRAcSl-bc-quantization",
+  "paper": {
+    "title": "Understanding Behavior Cloning with Action Quantization",
+    "authors": ["Haoqun Cao", "Tengyang Xie"],
+    "openreview_id": "9uENnRAcSl",
+    "arxiv_id": "2603.20538",
+    "audited_arxiv_version": "v1",
+    "source_sha256": "a1517e403f96e5c0c3529bbf8fcf3d8fad29b3149f164added02036f3318f0e1"
+  },
+  "overall_status": "MIXED_RESULTS",
+  "evidence_release_gate_passed": true,
+  "strict_publication_gate_passed": false,
+  "strict_publication_gate_status": "NOT_READY",
+  "finite_claim_contracts_passed": 6,
+  "finite_claim_contracts_total": 6,
+  "paper_claims_strictly_verified": 0,
+  "claim_statuses": {
+    "C1": "VERIFIED_SCOPED",
+    "C2": "VERIFIED_SCOPED",
+    "C3": "VERIFIED_SCOPED",
+    "C4": "VERIFIED_SCOPED",
+    "C5": "VERIFIED_SCOPED_WITH_DISPLAYED_CONSTANT_GAP",
+    "C6": "FALSIFIED_AS_LITERAL_EMPIRICAL_CLAIM_THEORETICAL_CONTRAST_VERIFIED_SCOPED"
+  },
+  "fixed_command": "uv run --frozen python repro/src/verify_bc.py",
+  "authoritative_evidence": "repro/release_snapshot/evidence",
+  "historical_root_outputs": ["outputs/verdict.json", "outputs/verify_run.log"],
+  "limitations": [
+    "Finite certificates do not establish universal or asymptotic theorems.",
+    "C5 records a displayed constant/probability gap and a separately certified rate-preserving constant.",
+    "C6's historical empirical attribution is not a claim made by the paper."
+  ]
 }
